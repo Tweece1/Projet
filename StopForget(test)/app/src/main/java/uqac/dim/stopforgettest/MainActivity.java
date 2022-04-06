@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==2){
-
+            String test="on s'en fout";
         }
     }
 }
