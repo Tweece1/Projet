@@ -12,21 +12,24 @@
         android:ems="10"
         android:fontFamily="@font/fredokalight"
         android:hint="@string/title"
-        android:inputType="textPersonName"
+        android:inputType="none"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.351"
+        app:layout_constraintHorizontal_bias="0.402"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:layout_editor_absoluteY="0dp"
+        android:enabled="false" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/valider"
         android:backgroundTint="@color/blue"
-        tools:layout_editor_absoluteX="158dp"
-        tools:layout_editor_absoluteY="667dp"
+        android:text="@string/valider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listeview2"
         tools:ignore="MissingConstraints" />
 
     <ListView
@@ -35,7 +38,8 @@
         android:layout_height="600dp"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="51dp"></ListView>
+        tools:layout_editor_absoluteY="51dp">
+    </ListView>
 
     <ImageButton
         android:id="@+id/backbutton"
@@ -45,9 +49,10 @@
         android:backgroundTint="@color/white"
         android:onClick="onBack"
         android:scaleType="centerInside"
+        app:layout_constraintEnd_toStartOf="@+id/list_title"
+        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/fleche"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-9dp"
         tools:layout_editor_absoluteY="-8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

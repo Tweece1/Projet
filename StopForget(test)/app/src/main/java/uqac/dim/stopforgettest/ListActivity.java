@@ -23,14 +23,17 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
-        Intent intent=getIntent();
     }
 
-    /*public void onBack(View v){
+    public void onBack(View v){
         onBackPressed();
+        Intent intent=new Intent();
+        intent.putExtra("titre","test");
+        setResult(2,intent);
+        finish();
     }
 
-    /*@Override
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -38,5 +41,5 @@ public class ListActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 }
