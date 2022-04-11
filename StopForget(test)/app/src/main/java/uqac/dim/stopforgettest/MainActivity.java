@@ -25,13 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void creation(View v){
         Intent intent=new Intent(MainActivity.this,ListActivity.class);
-        startActivityForResult(intent,2);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==2){
-            String test="on s'en fout";
-        }
+        intent.putExtra("test","test");
+        startActivity(intent);
     }
 }
