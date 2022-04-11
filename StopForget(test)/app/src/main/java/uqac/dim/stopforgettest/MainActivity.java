@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> tableautest;
     private ArrayAdapter<String> adapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         tableautest=new ArrayList<String>();
         adapter=new ArrayAdapter<>(this,R.layout.listview,tableautest);
 
-        ListView listView = findViewById(R.id.listeview);
+        listView=findViewById(R.id.listeview);
         listView.setAdapter(adapter);
     }
 
@@ -36,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==2){
-
+            if (data.getBooleanExtra("valider?",true)) {
+                adapter.add(data.getStringExtra("titre"));
+            }
         }
     }
 }

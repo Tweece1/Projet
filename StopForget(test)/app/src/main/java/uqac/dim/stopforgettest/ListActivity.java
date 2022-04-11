@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -16,19 +17,29 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ListActivity extends AppCompatActivity {
 
-    private ImageButton back;
-    private String[] tableautest;
+    private EditText titre;
+    private String new_titre;
+    private boolean valider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
+
+        new_titre="";
+        titre=findViewById(R.id.listtitre);
+        valider=false;
+    }
+
+    public void ValiderTitre(View v){
+        new_titre=titre.getText().toString();
+        if (valider==false){valider=true;}
     }
 
     public void onBack(View v){
-        onBackPressed();
         Intent intent=new Intent();
-        intent.putExtra("titre","test");
+        intent.putExtra("titre",new_titre);
+        intent.putExtra("valider?",valider);
         setResult(2,intent);
         finish();
     }

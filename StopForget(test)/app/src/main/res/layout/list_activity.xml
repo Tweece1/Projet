@@ -5,21 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/list_title"
-        android:layout_width="180dp"
-        android:layout_height="51dp"
-        android:ems="10"
-        android:fontFamily="@font/fredokalight"
-        android:hint="@string/title"
-        android:inputType="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.402"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="0dp"
-        android:enabled="false" />
-
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
@@ -30,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listeview2"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:onClick="ValiderTitre" />
 
     <ListView
         android:id="@+id/listeview2"
@@ -49,10 +35,22 @@
         android:backgroundTint="@color/white"
         android:onClick="onBack"
         android:scaleType="centerInside"
-        app:layout_constraintEnd_toStartOf="@+id/list_title"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/fleche"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="-8dp" />
+
+    <EditText
+        android:id="@+id/listtitre"
+        android:layout_width="162dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:fontFamily="@font/fredokalight"
+        android:hint="Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/backbutton"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
