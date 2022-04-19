@@ -30,7 +30,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + "integer primary key autoincrement, " + NAME
             + "text not null, " + PARENT_ID + "integer, " + NB + "integer, "
             + NBC + "integer, " + TYPE + "integer, " + ANCETRE_ID + "integer, "
-            + CHECKED + "boolean) " ;
+            + CHECKED + "integer) " ;
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -73,14 +73,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             return null;
 
         @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
-        @SuppressLint("Range") String nb=c.getString(c.getColumnIndex(NB));
-        @SuppressLint("Range") String nbc=c.getString(c.getColumnIndex(NBC));
+        @SuppressLint("Range") int nb=c.getInt(c.getColumnIndex(NB));
+        @SuppressLint("Range") int nbc=c.getInt(c.getColumnIndex(NBC));
 
         Liste l=new Liste(name);
-        l.nb=Integer.parseInt(nb);
-        l.nbc=Integer.parseInt(nbc);
+        l.nb=nb;
+        l.nbc=nbc;
         l.setId(id);
 
+        c.close();
         return l;
     }
 
@@ -89,7 +90,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         ContentValues values=new ContentValues();
         values.put(MySQLiteHelper.NAME,e.name);
-        values.put(MySQLiteHelper.CHECKED,e.checked);
+        values.put(MySQLiteHelper.CHECKED,isChecked2(e.checked));
         values.put(MySQLiteHelper.ANCETRE_ID,e.ancetre.getId());
         if (e.parent==null)
             values.put(MySQLiteHelper.PARENT_ID,e.ancetre.getId());
@@ -118,33 +119,48 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             return null;
 
         @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
-        @SuppressLint("Range") String nb=c.getString(c.getColumnIndex(NB));
-        @SuppressLint("Range") String nbc=c.getString(c.getColumnIndex(NBC));
-        @SuppressLint("Range") String parent_id=c.getString(c.getColumnIndex(PARENT_ID));
-        @SuppressLint("Range") String type=c.getString(c.getColumnIndex(TYPE));
-        @SuppressLint("Range") String checked=c.getString(c.getColumnIndex(CHECKED));
-        @SuppressLint("Range") String ancetre_id=c.getString(c.getColumnIndex(ANCETRE_ID));
-        if (type=="0"){
+        @SuppressLint("Range") int nb=c.getInt(c.getColumnIndex(NB));
+        @SuppressLint("Range") int nbc=c.getInt(c.getColumnIndex(NBC));
+        @SuppressLint("Range") int parent_id=c.getInt(c.getColumnIndex(PARENT_ID));
+        @SuppressLint("Range") int type=c.getInt(c.getColumnIndex(TYPE));
+        @SuppressLint("Range") int checked=c.getInt(c.getColumnIndex(CHECKED));
+        @SuppressLint("Range") int ancetre_id=c.getInt(c.getColumnIndex(ANCETRE_ID));
+        c.close();
+        if (type==0){
             Item item;
-            if (parent_id=="-1")
-                item=new Item(name,null,getList(Integer.parseInt(ancetre_id)));
+            if (parent_id==-1)
+                item=new Item(name,null,getList(ancetre_id));
             else
-                item=new Item(name,(SousListe)getElement(Integer.parseInt(parent_id)),getList(Integer.parseInt(ancetre_id)));
-            item.checked=Boolean.getBoolean(checked);
+                item=new Item(name,(SousListe)getElement(parent_id),getList(ancetre_id));
+            item.checked=isChecked(checked);
             item.type=Element.Type.ITEM;
             return item;
         }
         else{
             SousListe sousListe;
-            if (parent_id=="-1")
-                sousListe=new SousListe(name,null,getList(Integer.parseInt(ancetre_id)));
+            if (parent_id==-1)
+                sousListe=new SousListe(name,null,getList(ancetre_id));
             else
-                sousListe=new SousListe(name,(SousListe)getElement(Integer.parseInt(parent_id)),getList(Integer.parseInt(ancetre_id)));
-            sousListe.checked=Boolean.getBoolean(checked);
+                sousListe=new SousListe(name,(SousListe)getElement(parent_id),getList(ancetre_id));
+            sousListe.checked=isChecked(checked);
             sousListe.type=Element.Type.SOUSLISTE;
-            sousListe.nb=Integer.parseInt(nb);
-            sousListe.nbc=Integer.parseInt(nbc);
+            sousListe.nb=nb;
+            sousListe.nbc=nbc;
             return sousListe;
         }
+    }
+
+    public boolean isChecked(int c){
+        if (c==0)
+            return true;
+        else
+            return false;
+    }
+
+    public int isChecked2(boolean c){
+        if (c)
+            return 0;
+        else
+            return 1;
     }
 }
