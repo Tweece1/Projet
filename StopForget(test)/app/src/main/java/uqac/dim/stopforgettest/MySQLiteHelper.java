@@ -130,6 +130,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 item=new Item(name,null,getList(Integer.parseInt(ancetre_id)));
             else
                 item=new Item(name,(SousListe)getElement(Integer.parseInt(parent_id)),getList(Integer.parseInt(ancetre_id)));
+            item.checked=Boolean.getBoolean(checked);
+            item.type=Element.Type.ITEM;
             return item;
         }
         else{
@@ -138,6 +140,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 sousListe=new SousListe(name,null,getList(Integer.parseInt(ancetre_id)));
             else
                 sousListe=new SousListe(name,(SousListe)getElement(Integer.parseInt(parent_id)),getList(Integer.parseInt(ancetre_id)));
+            sousListe.checked=Boolean.getBoolean(checked);
+            sousListe.type=Element.Type.SOUSLISTE;
+            sousListe.nb=Integer.parseInt(nb);
+            sousListe.nbc=Integer.parseInt(nbc);
             return sousListe;
         }
     }
