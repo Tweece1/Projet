@@ -8,13 +8,15 @@ public class SousListe extends Element{
     public int nb;
     public int nbc;
 
-    public SousListe(String name){
+    public SousListe(String name, SousListe parent, Liste ancetre){
         this.name=name;
         liste=new ArrayList<Element>();
         nb=0;
         nbc=0;
         checked=false;
         type=Type.SOUSLISTE;
+        this.parent=parent;
+        this.ancetre=ancetre;
     }
 
     @Override
@@ -65,5 +67,15 @@ public class SousListe extends Element{
                 p=p.parent;
             }
         }
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id=id;
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }

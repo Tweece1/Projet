@@ -2,11 +2,12 @@ package uqac.dim.stopforgettest;
 
 public class Item extends Element {
 
-    public Item(String name, SousListe parent){
+    public Item(String name, SousListe parent, Liste ancetre){
         this.name=name;
         checked=false;
         type=Type.ITEM;
         this.parent=parent;
+        this.ancetre=ancetre;
     }
 
     @Override
@@ -42,5 +43,15 @@ public class Item extends Element {
                 p=p.parent;
             }
         }
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id=id;
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 }
