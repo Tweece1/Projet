@@ -80,21 +80,34 @@ public class SousListe extends Element{
 
     @Override
     public void decocher() {
-        checked=false;
-        for (Element e:liste) {
-            e.decocher();
-        }
+        ancetre.nbc-=nb;
         __decocher();
+        __decochersuite();
     }
 
     public void __decocher(){
+        checked=false;
+        nbc = 0;
+        for (Element e:liste) {
+            if(e.type == Type.ITEM){
+                Item i = (Item) e;
+                i.checked = false;
+            }
+            else{
+                SousListe s = (SousListe) e;
+                s.__decocher();
+            }
+        }
+    }
+
+    public void __decochersuite(){
         SousListe p=parent;
         while (p!=null)
         {
             p.nbc-=this.nb;
             if (p.nbc==p.nb-(this.nb)){
                 p.checked=false;
-                p.__decocher();
+                p.__decochersuite();
                 p=null;
             }
             else {

@@ -37,19 +37,18 @@ public class Item extends Element {
     @Override
     public void decocher() {
         checked=false;
+        ancetre.nbc-=1;
         SousListe p=parent;
         while (p!=null)
         {
             p.nbc-=1;
             if (p.nbc==p.nb-1){
-                p.decocher();
-                p=null;
+                p.checked = false;
             }
-            else {
-                p=p.parent;
-            }
+            p=p.parent;
         }
     }
+
 
     @Override
     public void setId(long id) {
