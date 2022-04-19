@@ -21,21 +21,33 @@ public class SousListe extends Element{
 
     @Override
     public void cocher() {
-        checked=true;
-        for (Element e:liste) {
-            e.cocher();
-        }
+        ancetre.nbc+=nb;
         __cocher();
+        __cochersuite();
     }
 
     public void __cocher(){
+        checked=true;
+        for (Element e:liste) {
+            if(e.type == Type.SOUSLISTE){
+                SousListe o = (SousListe) e;
+                o.__cocher();
+            }
+            else{
+                e.cocher2();
+            }
+        }
+        nbc = nb;
+    }
+
+    public void __cochersuite(){
         SousListe p=parent;
         while (p!=null)
         {
             p.nbc+=this.nb;
             if (p.nbc==p.nb){
                 p.checked=true;
-                p.__cocher();
+                p.__cochersuite();
                 p=null;
             }
             else {
@@ -44,6 +56,7 @@ public class SousListe extends Element{
         }
     }
 
+    @Override
     public void cocher2(){
         checked = true;
         __cocher2();

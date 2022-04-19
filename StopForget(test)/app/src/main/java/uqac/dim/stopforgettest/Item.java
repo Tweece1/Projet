@@ -29,6 +29,7 @@ public class Item extends Element {
         ancetre.nbc+=1;
     }
 
+    @Override
     public void cocher2(){
         checked=true;
     }
