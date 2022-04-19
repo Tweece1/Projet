@@ -18,7 +18,7 @@ public class Item extends Element {
         {
             p.nbc+=1;
             if (p.nbc==p.nb){
-                p.cocher();
+                p.cocher2();
                 p=null;
             }
             else {
@@ -26,6 +26,11 @@ public class Item extends Element {
                 p=p.parent;
             }
         }
+        ancetre.nbc+=1;
+    }
+
+    public void cocher2(){
+        checked=true;
     }
 
     @Override

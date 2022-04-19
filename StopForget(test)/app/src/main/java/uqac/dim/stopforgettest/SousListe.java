@@ -44,6 +44,27 @@ public class SousListe extends Element{
         }
     }
 
+    public void cocher2(){
+        checked = true;
+        __cocher2();
+    }
+
+    public void __cocher2(){
+        SousListe p=parent;
+        while (p!=null)
+        {
+            p.nbc+=1;
+            if (p.nbc==p.nb){
+                p.checked=true;
+                p.__cocher2();
+                p=null;
+            }
+            else {
+                p=p.parent;
+            }
+        }
+    }
+
     @Override
     public void decocher() {
         checked=false;
