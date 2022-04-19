@@ -1,56 +1,39 @@
 package uqac.dim.stopforgettest;
 
+import static uqac.dim.stopforgettest.MySQLiteHelper.ANCETRE_ID;
+import static uqac.dim.stopforgettest.MySQLiteHelper.CHECKED;
+import static uqac.dim.stopforgettest.MySQLiteHelper.ID;
+import static uqac.dim.stopforgettest.MySQLiteHelper.NAME;
+import static uqac.dim.stopforgettest.MySQLiteHelper.NB;
+import static uqac.dim.stopforgettest.MySQLiteHelper.NBC;
+import static uqac.dim.stopforgettest.MySQLiteHelper.PARENT_ID;
+import static uqac.dim.stopforgettest.MySQLiteHelper.TABLE_LISTES;
+import static uqac.dim.stopforgettest.MySQLiteHelper.TYPE;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class MySQLiteHelper extends SQLiteOpenHelper {
+public class DataBase {
 
-    private static final String DATABASE_NAME = "listes.db";
-    private static final int DATABASE_VERSION = 1;
+    private MySQLiteHelper dbHelper;
+    private SQLiteDatabase database;
+    private static final String[] allColums={ID,NAME,PARENT_ID,NB,NBC,TYPE,CHECKED,ANCETRE_ID};
 
-    public static final String TABLE_LISTES="listes";
+    public DataBase(Context context){dbHelper=new MySQLiteHelper(context);}
 
-    public static final String ID= "id";
-    public static final String NAME ="name";
-    public static final String PARENT_ID="parent";
-    public static final String NB="nb";
-    public static final String NBC="nbc";
-    public static final String TYPE="type";
-    public static final String CHECKED="checked";
-    public static final String ANCETRE_ID="ancetre_id";
-
-
-    private static final String CREATE_LISTES= " create table "
-            + TABLE_LISTES + "(" + ID
-            + " integer primary key autoincrement, " + NAME
-            + " text not null, " + PARENT_ID + " integer, " + NB + " integer, "
-            + NBC + " integer, " + TYPE + " integer, " + ANCETRE_ID + " integer, "
-            + CHECKED + " integer ) " ;
-
-    public MySQLiteHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public void open() throws SQLException{
+        database=dbHelper.getWritableDatabase();
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_LISTES);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldversion, int newversion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LISTES);
-        onCreate(db);
-    }
+    public void close(){dbHelper.close();}
 
     public void adList(Liste l){
-        SQLiteDatabase db=getWritableDatabase();
 
         ContentValues values=new ContentValues();
         values.put(MySQLiteHelper.NAME,l.name);
@@ -60,15 +43,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(MySQLiteHelper.ANCETRE_ID,-1);
         values.put(MySQLiteHelper.TYPE,2);
 
-        l.setId(db.insert(TABLE_LISTES,null,values));
+        l.setId(database.insert(TABLE_LISTES,null,values));
     }
 
     public Liste getList(long id){
-        SQLiteDatabase db=this.getReadableDatabase();
         String selectquery="SELECT * FROM " + TABLE_LISTES
                 + " WHERE " + ID + " = " + id;
 
-        Cursor c=db.rawQuery(selectquery,null);
+        Cursor c=database.rawQuery(selectquery,null);
         if (c!=null)
             c.moveToFirst();
         else
@@ -88,7 +70,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     public void adElement(Element e){
-        SQLiteDatabase db=getReadableDatabase();
 
         ContentValues values=new ContentValues();
         values.put(MySQLiteHelper.NAME,e.name);
@@ -106,15 +87,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             values.put(MySQLiteHelper.NBC,((SousListe) e).nbc);
         }
 
-        e.setId(db.insert(TABLE_LISTES,null,values));
+        e.setId(database.insert(TABLE_LISTES,null,values));
     }
 
     public Element getElement(long id){
-        SQLiteDatabase db=this.getReadableDatabase();
         String selcectquery="SELECT * FROM " + TABLE_LISTES
                 + " WHERE " + ID + " = " + id;
 
-        Cursor c=db.rawQuery(selcectquery,null);
+        Cursor c=database.rawQuery(selcectquery,null);
         if (c!=null)
             c.moveToFirst();
         else
@@ -152,6 +132,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
+    public ArrayList<String> getAllLists(){
+        ArrayList<String> list=new ArrayList<>();
+
+        Cursor c=database.query(TABLE_LISTES,allColums,null,null,null,null,null);
+
+        c.moveToFirst();
+        while (!c.isAfterLast()){
+            @SuppressLint("Range") int ancetre_id=c.getInt(c.getColumnIndex(ANCETRE_ID));
+            if (ancetre_id==-1) {
+                @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
+                list.add(name);
+            }
+            c.moveToNext();
+        }
+        c.close();
+        return list;
+    }
 
     public boolean isChecked(int c){
         if (c==0)
