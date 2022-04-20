@@ -80,4 +80,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void select(View v){
+        creation(v);
+    }
 }
