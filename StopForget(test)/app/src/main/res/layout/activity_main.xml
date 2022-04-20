@@ -27,7 +27,7 @@
         android:background="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></View>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageButton
@@ -37,6 +37,7 @@
         android:background="@color/blue"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
+        android:contentDescription="@string/poubelle"
         app:layout_constraintStart_toStartOf="@id/view"
         app:layout_constraintTop_toTopOf="@id/view"
         app:layout_constraintBottom_toBottomOf="@id/view"
