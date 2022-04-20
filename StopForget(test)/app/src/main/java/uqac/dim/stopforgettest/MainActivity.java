@@ -2,68 +2,44 @@ package uqac.dim.stopforgettest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.nio.channels.Selector;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> tableautest;
+    private ArrayList<String> listes;
     private ArrayAdapter<String> adapter;
     private ListView listView;
+    public static DataBase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        database=new DataBase(this);
+        database.open();
 
-        tableautest=new ArrayList<String>();
-        tableautest.add("red");
-        tableautest.add("blue");
-        adapter=new ArrayAdapter<>(this,R.layout.listview,tableautest);
+        listes=database.getAllLists();
+        adapter=new ArrayAdapter<>(this,R.layout.listview, listes);
 
         listView=findViewById(R.id.listeview);
         listView.setAdapter(adapter);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
-
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode actionMode) {
-
-            }
-        });
     }
 
     public void creation(View v){
@@ -77,8 +53,28 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode==2){
             if (data.getBooleanExtra("valider?",true)) {
                 adapter.add(data.getStringExtra("titre"));
+                database.addList(new Liste(data.getStringExtra("titre")));
             }
         }
+    }
+
+
+    @Override
+    protected void onResume() {
+        database.open();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        database.open();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        database.close();
+        super.onDestroy();
     }
 
     public void select(View v){
