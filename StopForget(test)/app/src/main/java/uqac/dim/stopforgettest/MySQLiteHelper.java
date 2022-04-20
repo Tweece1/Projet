@@ -29,7 +29,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_LISTES= " create table "
-            + TABLE_LISTES + "(" + ID
+            + TABLE_LISTES + " ( " + ID
             + " integer primary key autoincrement, " + NAME
             + " text not null, " + PARENT_ID + " integer, " + NB + " integer, "
             + NBC + " integer, " + TYPE + " integer, " + ANCETRE_ID + " integer, "

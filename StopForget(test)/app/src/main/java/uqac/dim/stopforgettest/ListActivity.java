@@ -15,17 +15,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class ListActivity extends AppCompatActivity {
 
     private EditText titre;
     private String new_titre;
     private boolean valider;
+    private ArrayList<Element> container;
+    private long id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
 
+        container=new ArrayList<>();
         new_titre="";
         titre=findViewById(R.id.listtitre);
         valider=false;

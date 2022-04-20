@@ -70,6 +70,18 @@ public class DataBase {
         return l;
     }
 
+    public int updateList(Liste l){
+        ContentValues values=new ContentValues();
+        values.put(MySQLiteHelper.NAME,l.name);
+        values.put(MySQLiteHelper.NB,l.nb);
+        values.put(MySQLiteHelper.NBC,l.nbc);
+        values.put(MySQLiteHelper.PARENT_ID,-1);
+        values.put(MySQLiteHelper.ANCETRE_ID,-1);
+        values.put(MySQLiteHelper.TYPE,2);
+
+        return database.update(TABLE_LISTES, values,ID + " = ?",new String[]{String.valueOf(l.getId())});
+    }
+
     public void addElement(Element e){
 
         ContentValues values=new ContentValues();
@@ -107,7 +119,7 @@ public class DataBase {
         @SuppressLint("Range") int parent_id=c.getInt(c.getColumnIndex(PARENT_ID));
         @SuppressLint("Range") int type=c.getInt(c.getColumnIndex(TYPE));
         @SuppressLint("Range") int checked=c.getInt(c.getColumnIndex(CHECKED));
-        @SuppressLint("Range") int ancetre_id=c.getInt(c.getColumnIndex(ANCETRE_ID));
+        @SuppressLint("Range") long ancetre_id=c.getLong(c.getColumnIndex(ANCETRE_ID));
         c.close();
         if (type==0){
             Item item;
@@ -133,7 +145,26 @@ public class DataBase {
         }
     }
 
-    public ArrayList<String> getAllLists(){
+    public int updateElement(Element e) {
+        ContentValues values=new ContentValues();
+        values.put(MySQLiteHelper.NAME,e.name);
+        values.put(MySQLiteHelper.CHECKED,isChecked2(e.checked));
+        values.put(MySQLiteHelper.ANCETRE_ID,e.ancetre.getId());
+        if (e.parent==null)
+            values.put(MySQLiteHelper.PARENT_ID,e.ancetre.getId());
+        else
+            values.put(MySQLiteHelper.PARENT_ID,e.parent.getId());
+        if (e.type== Element.Type.ITEM)
+            values.put(MySQLiteHelper.TYPE,0);
+        else {
+            values.put(MySQLiteHelper.TYPE,1);
+            values.put(MySQLiteHelper.NB,((SousListe) e).nb);
+            values.put(MySQLiteHelper.NBC,((SousListe) e).nbc);
+        }
+        return database.update(TABLE_LISTES,values,ID + " = ?",new String[]{String.valueOf(e.id)});
+    }
+
+    public ArrayList<String> getAllListsName(){
         ArrayList<String> list=new ArrayList<>();
 
         Cursor c=database.query(TABLE_LISTES,allColums,null,null,null,null,null);
@@ -144,6 +175,30 @@ public class DataBase {
             if (ancetre_id==-1) {
                 @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
                 list.add(name);
+            }
+            c.moveToNext();
+        }
+        c.close();
+        return list;
+    }
+
+    public ArrayList<Liste> getAllLists(){
+        ArrayList<Liste> list=new ArrayList<>();
+
+        Cursor c=database.query(TABLE_LISTES,allColums,null,null,null,null,null);
+
+        c.moveToFirst();
+        while (!c.isAfterLast()){
+            @SuppressLint("Range") int ancetre_id=c.getInt(c.getColumnIndex(ANCETRE_ID));
+            if (ancetre_id==-1) {
+                @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
+                @SuppressLint("Range") int nb=c.getInt(c.getColumnIndex(NB));
+                @SuppressLint("Range") int id=c.getInt(c.getColumnIndex(ID));
+                Liste l=new Liste(name);
+                l.nb=nb;
+                l.setId(id);
+                l.type= Element.Type.LISTE;
+                list.add(l);
             }
             c.moveToNext();
         }
