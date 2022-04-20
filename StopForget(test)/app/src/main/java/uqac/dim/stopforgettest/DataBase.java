@@ -49,7 +49,7 @@ public class DataBase {
 
     public Liste getList(long id){
         String selectquery="SELECT * FROM " + TABLE_LISTES
-                + " WHERE " + ID + " = " + id;
+                + " WHERE " + NAME + " = " + id;
 
         Cursor c=database.rawQuery(selectquery,null);
         if (c!=null)
