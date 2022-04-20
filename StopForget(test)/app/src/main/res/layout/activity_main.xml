@@ -37,7 +37,7 @@
         android:background="@color/blue"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
-        android:onClick="supprimer"
+        android:onClick="deleteList"
         android:contentDescription="@string/poubelle"
         app:layout_constraintStart_toStartOf="@id/view"
         app:layout_constraintTop_toTopOf="@id/view"

@@ -2,6 +2,7 @@ package uqac.dim.stopforgettest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,30 +22,36 @@ public class ListActivity extends AppCompatActivity {
 
     private EditText titre;
     private String new_titre;
-    private boolean valider;
     private ArrayList<Element> container;
     private long id;
+    private int array_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
 
+        Intent intent=getIntent();
+        id=intent.getLongExtra("id",-1);
+        array_id=intent.getIntExtra("array_id",0);
         container=new ArrayList<>();
-        new_titre="";
         titre=findViewById(R.id.listtitre);
-        valider=false;
-    }
 
-    public void ValiderTitre(View v){
-        new_titre=titre.getText().toString();
-        if (valider==false){valider=true;}
+        if (id==-1){
+            new_titre="";
+        }
+        else{
+            new_titre=intent.getStringExtra("titre");
+            titre.setText(new_titre);
+        }
     }
 
     public void onBack(View v){
         Intent intent=new Intent();
+        new_titre=titre.getText().toString();
         intent.putExtra("titre",new_titre);
-        intent.putExtra("valider?",valider);
+        intent.putExtra("id",id);
+        intent.putExtra("array_id",array_id);
         setResult(2,intent);
         finish();
     }

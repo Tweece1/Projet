@@ -206,7 +206,7 @@ public class DataBase {
         return list;
     }
 
-    public void delete(int id){
+    public void delete(long id){
         database.delete(TABLE_LISTES, ID + " = " + id,null);
     }
 

@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     public static DataBase database;
     private TextView txt=null;
+    private ArrayList<TextView> to_delete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         listes_name=database.getAllListsName();
         listes=database.getAllLists();
+        to_delete=new ArrayList<>();
+
         adapter=new ArrayAdapter<>(this,R.layout.listview, listes_name);
 
         listView=findViewById(R.id.listeview);
@@ -43,7 +50,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 txt = (TextView) view;
-                view.setBackgroundColor(R.color.blue);
+                boolean can=(txt.getBackground() instanceof GradientDrawable);
+                if (can){
+                    txt.setBackgroundColor(R.color.blue);
+                    to_delete.add(txt);
+                }
+                else {
+                    txt.setBackground(getDrawable(R.drawable.bg_main));
+                    to_delete.remove(txt);
+                }
                 return true;
             }
         });
@@ -57,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void creation(View v){
         Intent intent=new Intent(MainActivity.this,ListActivity.class);
+        intent.putExtra("id",-1);
         startActivityForResult(intent,2);
     }
 
@@ -64,12 +80,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==2){
-            if (data.getBooleanExtra("valider?",true)) {
+            Liste l=new Liste(data.getStringExtra("titre"));
+            if (data.getLongExtra("id",-1)==-1){
                 adapter.add(data.getStringExtra("titre"));
-                Liste l=new Liste(data.getStringExtra("titre"));
                 database.addList(l);
                 listes.add(l);
             }
+            else{
+                l.setId(data.getLongExtra("id",-1));
+                int array_id=data.getIntExtra("array_id",0);
+                database.updateList(l);
+                listes_name.set(array_id,l.name);
+                adapter.notifyDataSetChanged();
+            }
+
         }
     }
 
@@ -93,14 +117,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void select(View v){
-        creation(v);
+        Intent intent=new Intent(MainActivity.this,ListActivity.class);
+        String name=((TextView)v).getText().toString();
+        intent.putExtra("titre",name);
+        Liste l=searchList(name);
+        intent.putExtra("id",l.getId());
+        intent.putExtra("array_id",adapter.getPosition(name));
+        startActivityForResult(intent,2);
     }
 
-    public void supprimer(View v){
-        if(txt!=null){
-            //TODO
-
-            txt=null;
+    public void deleteList(View v){
+        for (TextView textView : to_delete){
+            String name=textView.getText().toString();
+            Liste liste=searchList(name);
+            database.delete(liste.getId());
+            adapter.remove(name);
         }
+        adapter.notifyDataSetChanged();
+        to_delete.clear();
     }
+
+    public Liste searchList(String name){
+        boolean found=false;
+        Liste res=new Liste(name);
+        int index=0;
+        while (!found){
+            String is_name=(listes.get(index)).name;
+            if (is_name.equals(name)){
+                found=true;
+                res=listes.get(index);
+            }
+            index++;
+        }
+        return res;
+    }
+
 }
