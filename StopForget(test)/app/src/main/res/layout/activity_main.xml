@@ -31,12 +31,13 @@
 
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/poubelle"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:background="@color/blue"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
+        android:onClick="supprimer"
         android:contentDescription="@string/poubelle"
         app:layout_constraintStart_toStartOf="@id/view"
         app:layout_constraintTop_toTopOf="@id/view"

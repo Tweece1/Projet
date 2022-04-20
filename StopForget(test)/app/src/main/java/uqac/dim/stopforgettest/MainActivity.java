@@ -2,10 +2,13 @@ package uqac.dim.stopforgettest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private ListView listView;
     public static DataBase database;
+    private TextView txt=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,21 @@ public class MainActivity extends AppCompatActivity {
 
         listView=findViewById(R.id.listeview);
         listView.setAdapter(adapter);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                txt = (TextView) view;
+                view.setBackgroundColor(R.color.blue);
+                return true;
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                select(view);
+            }
+        });
     }
 
     public void creation(View v){
@@ -75,5 +94,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void select(View v){
         creation(v);
+    }
+
+    public void supprimer(View v){
+        if(txt!=null){
+            //TODO
+
+            txt=null;
+        }
     }
 }

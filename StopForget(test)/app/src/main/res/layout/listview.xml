@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:textSize="25sp"
     android:padding="20sp"
-    android:onClick="select"
     android:layout_marginTop="20sp"
     android:layout_marginHorizontal="10sp"
     android:background="@drawable/bg_main"
