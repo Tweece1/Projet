@@ -3,20 +3,15 @@ package uqac.dim.stopforgettest;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.nio.channels.Selector;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> tableautest;
     private ArrayAdapter<String> adapter;
     private ListView listView;
-    private DataBase database;
+    public static DataBase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +74,26 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode==2){
             if (data.getBooleanExtra("valider?",true)) {
                 adapter.add(data.getStringExtra("titre"));
+                database.addList(new Liste(data.getStringExtra("titre")));
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        database.open();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        database.open();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        database.close();
+        super.onDestroy();
     }
 }

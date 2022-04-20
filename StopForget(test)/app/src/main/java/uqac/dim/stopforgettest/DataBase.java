@@ -16,6 +16,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ public class DataBase {
 
     public void close(){dbHelper.close();}
 
-    public void adList(Liste l){
+    public void addList(Liste l){
 
         ContentValues values=new ContentValues();
         values.put(MySQLiteHelper.NAME,l.name);
@@ -69,7 +70,7 @@ public class DataBase {
         return l;
     }
 
-    public void adElement(Element e){
+    public void addElement(Element e){
 
         ContentValues values=new ContentValues();
         values.put(MySQLiteHelper.NAME,e.name);
@@ -148,6 +149,10 @@ public class DataBase {
         }
         c.close();
         return list;
+    }
+
+    public void delete(int id){
+        database.delete(TABLE_LISTES, ID + " = " + id,null);
     }
 
     public boolean isChecked(int c){
