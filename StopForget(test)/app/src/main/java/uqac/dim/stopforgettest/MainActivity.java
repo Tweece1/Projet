@@ -1,21 +1,19 @@
 package uqac.dim.stopforgettest;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
@@ -90,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 l.setId(data.getLongExtra("id",-1));
                 int array_id=data.getIntExtra("array_id",0);
                 database.updateList(l);
+                Liste n=listes.get(array_id);
+                n.name=l.name;
                 listes_name.set(array_id,l.name);
                 adapter.notifyDataSetChanged();
             }
