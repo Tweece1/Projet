@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -64,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 select(view);
+            }
+        });
+
+        // Create a button handler and call the dialog box display method in it
+        buttonPopup = findViewById(R.id.buttonPopup);
+        buttonPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopClass popUpClass = new PopClass();
+                popUpClass.showPopupWindow(v);
             }
         });
     }
