@@ -51,7 +51,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_gravity="top"
                 android:gravity="center"
-                android:text="annuler"
+                android:text="@string/annuler"
                 android:id="@+id/closepopup">
             </Button>
 
@@ -62,7 +62,8 @@
                 android:layout_marginLeft="7dp"
                 android:layout_gravity="top"
                 android:gravity="center"
-                android:text="test">
+                android:text="@string/valider"
+                android:id="@+id/validerpopup">
             </Button>
 
         </LinearLayout>

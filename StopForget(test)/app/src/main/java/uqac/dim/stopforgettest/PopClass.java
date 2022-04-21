@@ -14,36 +14,32 @@ public class PopClass {
     //PopupWindow display method
 
     public void showPopupWindow(final View view) {
-
-
-        //Create a View object yourself through inflater
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.pop_up_layout, null);
 
-        //Specify the length and width through constants
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;
-
-        //Make Inactive Items Outside Of PopupWindow
         boolean focusable = true;
 
         //Create a window with our parameters
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
-        //Set the location of the window on the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-        Button buttonEdit = popupView.findViewById(R.id.closepopup);
-        buttonEdit.setOnClickListener(new View.OnClickListener() {
+        Button buttonCancel = popupView.findViewById(R.id.closepopup);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
             }
         });
 
-
-
-        //Handler for clicking on the inactive zone of the window
+        Button buttonValider=popupView.findViewById(R.id.validerpopup);
+        buttonValider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
 
         popupView.setOnTouchListener(new View.OnTouchListener() {
             @Override

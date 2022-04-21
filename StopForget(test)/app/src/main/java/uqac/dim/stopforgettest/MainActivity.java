@@ -29,6 +29,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView txt=null;
     private ArrayList<TextView> to_delete;
 
+    private NotificationManager nm;
+    private int count;
+    private static String CHANNEL_ID = "glucose";
+    private static String CHANNEL_NAME = "wesh";
+    private static String CHANNEL_DESCRIPTION = "pourquoi";
+    private static int NOTIFICATION_ID = 1111;
+
+    private ImageButton buttonPopup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         database=new DataBase(this);
         database.open();
+        createNotificationChannel();
 
         listes_name=database.getAllListsName();
         listes=database.getAllLists();
@@ -78,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
                 popUpClass.showPopupWindow(v);
             }
         });
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
+            channel.setDescription(CHANNEL_DESCRIPTION);
+            nm = getSystemService(NotificationManager.class);
+            nm.createNotificationChannel(channel);
+        }
     }
 
     public void creation(View v){
