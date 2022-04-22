@@ -3,8 +3,7 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:layout_width="300sp"
-    android:background="@drawable/bg_main"
-    android:backgroundTint="@color/white"
+    android:background="@drawable/bg_popup"
     android:padding="20sp"
     android:layout_height="wrap_content">
 
