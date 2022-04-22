@@ -145,7 +145,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void creation(View v){
         Intent intent=new Intent(MainActivity.this,ListActivity.class);
-        intent.putExtra("id",-1);
+        Liste l=new Liste("");
+        adapter.add(l.name);
+        database.addList(l);
+        listes.add(l);
+        intent.putExtra("id",l.getId());
+        intent.putExtra("array_id",adapter.getPosition(l.name));
         startActivityForResult(intent,2);
     }
 
@@ -153,22 +158,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==2){
-            Liste l=new Liste(data.getStringExtra("titre"));
-            if (data.getLongExtra("id",-1)==-1){
-                adapter.add(data.getStringExtra("titre"));
-                database.addList(l);
-                listes.add(l);
-            }
-            else{
-                l.setId(data.getLongExtra("id",-1));
-                int array_id=data.getIntExtra("array_id",0);
-                database.updateList(l);
-                Liste n=listes.get(array_id);
-                n.name=l.name;
-                listes_name.set(array_id,l.name);
-                adapter.notifyDataSetChanged();
-            }
-
+            long id=data.getLongExtra("id",0);
+            int array_id=data.getIntExtra("array_id",0);
+            Liste l=database.getList(id);
+            l.name=data.getStringExtra("titre");
+            database.updateList(l);
+            listes.set(array_id,l);
+            listes_name.set(array_id,l.name);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -205,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         for (TextView textView : to_do){
             String name=textView.getText().toString();
             Liste liste=searchList(name);
+            database.deleteAllListsElement(liste.getId());
             database.delete(liste.getId());
             adapter.remove(name);
         }

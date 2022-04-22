@@ -49,7 +49,7 @@ public class DataBase {
 
     public Liste getList(long id){
         String selectquery="SELECT * FROM " + TABLE_LISTES
-                + " WHERE " + NAME + " = " + id;
+                + " WHERE " + ID + " = " + id;
 
         Cursor c=database.rawQuery(selectquery,null);
         if (c!=null)
@@ -101,6 +101,7 @@ public class DataBase {
         }
 
         e.setId(database.insert(TABLE_LISTES,null,values));
+        Log.i("DIM", String.valueOf(e.getId()));
     }
 
     public Element getElement(long id){
@@ -123,7 +124,7 @@ public class DataBase {
         c.close();
         if (type==0){
             Item item;
-            if (parent_id==-1)
+            if (parent_id==ancetre_id)
                 item=new Item(name,null,getList(ancetre_id));
             else
                 item=new Item(name,(SousListe)getElement(parent_id),getList(ancetre_id));
@@ -133,7 +134,7 @@ public class DataBase {
         }
         else{
             SousListe sousListe;
-            if (parent_id==-1)
+            if (parent_id==ancetre_id)
                 sousListe=new SousListe(name,null,getList(ancetre_id));
             else
                 sousListe=new SousListe(name,(SousListe)getElement(parent_id),getList(ancetre_id));
@@ -158,8 +159,8 @@ public class DataBase {
             values.put(MySQLiteHelper.TYPE,0);
         else {
             values.put(MySQLiteHelper.TYPE,1);
-            values.put(MySQLiteHelper.NB,((SousListe) e).nb);
-            values.put(MySQLiteHelper.NBC,((SousListe) e).nbc);
+            values.put(MySQLiteHelper.NB,((SousListe)e).nb);
+            values.put(MySQLiteHelper.NBC,((SousListe)e).nbc);
         }
         return database.update(TABLE_LISTES,values,ID + " = ?",new String[]{String.valueOf(e.id)});
     }
@@ -204,6 +205,84 @@ public class DataBase {
         }
         c.close();
         return list;
+    }
+
+    public ArrayList<Element> getAllListsElement(long id){
+        Liste ancetre=getList(id);
+
+        ArrayList<Element> res=new ArrayList<>();
+
+        Cursor c=database.query(TABLE_LISTES,allColums,null,null,null,null,null);
+
+        c.moveToFirst();
+        while (!c.isAfterLast()){
+            @SuppressLint("Range") int ancetre_id=c.getInt(c.getColumnIndex(ANCETRE_ID));
+            if (ancetre_id==id){
+                @SuppressLint("Range") int type=c.getInt(c.getColumnIndex(TYPE));
+                if(type==0){
+                    @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
+                    @SuppressLint("Range") int che=c.getInt(c.getColumnIndex(CHECKED));
+                    @SuppressLint("Range") int p=c.getInt(c.getColumnIndex(PARENT_ID));
+                    @SuppressLint("Range") int id1=c.getInt(c.getColumnIndex(ID));
+                    Log.i("DIM","le bon " + name);
+                    Log.i("DIM", String.valueOf(p));
+                    Log.i("DIM", String.valueOf(ancetre_id));
+                    if (p==ancetre_id) {
+                        Item item=new Item(name,null,ancetre);
+                        Log.i("DIM",name);
+                        item.checked=isChecked(che);
+                        item.setId(id1);
+                        res.add(item);
+                    }
+                    else{
+                        Log.i("DIM","p passe ici");
+                        Log.i("DIM",getElement(p).name);
+                        Item item=new Item(name,(SousListe)getElement(p),ancetre);
+                        Log.i("DIM",name);
+                        item.checked=isChecked(che);
+                        item.setId(id1);
+                        res.add(item);
+                    }
+                }
+                else {
+                    @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
+                    @SuppressLint("Range") int che=c.getInt(c.getColumnIndex(CHECKED));
+                    @SuppressLint("Range") int p=c.getInt(c.getColumnIndex(PARENT_ID));
+                    @SuppressLint("Range") int nb=c.getInt(c.getColumnIndex(NB));
+                    @SuppressLint("Range") int nbc=c.getInt(c.getColumnIndex(NBC));
+                    @SuppressLint("Range") int id1=c.getInt(c.getColumnIndex(ID));
+                    Log.i("DIM", String.valueOf(id1));
+                    if (p==ancetre_id) {
+                        SousListe sousListe=new SousListe(name,null,ancetre);
+                        Log.i("DIM",name);
+                        sousListe.checked=isChecked(che);
+                        sousListe.nb=nb;
+                        sousListe.nbc=nbc;
+                        sousListe.setId(id1);
+                        res.add(sousListe);
+                    }
+                    else{
+                        SousListe sousListe=new SousListe(name,(SousListe)getElement(p),ancetre);
+                        Log.i("DIM",name);
+                        sousListe.checked=isChecked(che);
+                        sousListe.nb=nb;
+                        sousListe.nbc=nbc;
+                        sousListe.setId(id1);
+                        res.add(sousListe);
+                    }
+                }
+            }
+            c.moveToNext();
+        }
+
+        return res;
+    }
+
+    public void deleteAllListsElement(long id){
+        ArrayList<Element> deleted=getAllListsElement(id);
+        for (Element e: deleted){
+            delete(e.getId());
+        }
     }
 
     public void delete(long id){

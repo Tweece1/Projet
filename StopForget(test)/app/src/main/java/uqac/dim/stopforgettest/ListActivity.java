@@ -47,22 +47,18 @@ public class ListActivity extends AppCompatActivity {
         Intent intent=getIntent();
         id=intent.getLongExtra("id",-1);
         array_id=intent.getIntExtra("array_id",0);
-        container=new ArrayList<>();
+        Log.i("DIM", String.valueOf(id));
+        container=MainActivity.database.getAllListsElement(id);
         titre=findViewById(R.id.listtitre);
-        //current_list=MainActivity.database.getList(id);
-        current_list = new Liste("bidule");
 
-        if (id==-1){
-            new_titre="";
-        }
-        else{
-            new_titre=intent.getStringExtra("titre");
-            titre.setText(new_titre);
-        }
+        current_list=MainActivity.database.getList(id);
+
+        new_titre=intent.getStringExtra("titre");
+        titre.setText(new_titre);
 
         listedetest = new ArrayList<>();
-        for (Element e: container
-             ) {
+        for (Element e: container) {
+            Log.i("DIM", String.valueOf(e.getId()));
             listedetest.add(e.afficher());
             current_list.add_element(e);
         }
@@ -143,6 +139,7 @@ public class ListActivity extends AppCompatActivity {
             adapter.add(sousListe.afficher());
             container.add(sousListe);
             current_list.add_element(sousListe);
+            MainActivity.database.addElement(sousListe);
             dialog.dismiss();
             refresh();
         }
@@ -159,10 +156,12 @@ public class ListActivity extends AppCompatActivity {
             else{
                 Item it = (Item) e;
                 sl = new SousListe(it.name,it.parent,it.ancetre);
+                sl.setId(it.getId());
             }
             SousListe sousListe = new SousListe(s,sl,current_list);
             sousListe.ajou();
             sl.liste.add(sousListe);
+            MainActivity.database.updateElement(sl);
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
             adapter.insert(sousListe.afficher(),currentpos+1);
@@ -184,6 +183,7 @@ public class ListActivity extends AppCompatActivity {
             adapter.add(item.afficher());
             container.add(item);
             current_list.add_element(item);
+            MainActivity.database.addElement(item);
             dialog.dismiss();
             refresh();
         }
@@ -200,10 +200,12 @@ public class ListActivity extends AppCompatActivity {
             else{
                 Item it = (Item) e;
                 sl = new SousListe(it.name,it.parent,it.ancetre);
+                sl.setId(it.getId());
             }
             Item item = new Item(s,sl,current_list);
             item.ajou();
             sl.liste.add(item);
+            MainActivity.database.updateElement(sl);
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
             adapter.insert(item.afficher(),currentpos+1);
@@ -213,6 +215,7 @@ public class ListActivity extends AppCompatActivity {
             current_list.delete_element(e);
             current_list.add_element(sl);
             current_list.add_element(item);
+            MainActivity.database.addElement(item);
             dialog.dismiss();
             refresh();
         }
@@ -226,8 +229,10 @@ public class ListActivity extends AppCompatActivity {
         String s = adapter.getItem(currentpos);
         current_list.delete_element(container.get(currentpos));
         container.get(currentpos).dele();
+        Element e=container.get(currentpos);
         container.remove(currentpos);
         adapter.remove(s);
+        MainActivity.database.delete(e.getId());
         dialog.dismiss();
         refresh();
     }
