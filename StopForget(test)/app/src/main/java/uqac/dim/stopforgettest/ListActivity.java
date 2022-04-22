@@ -1,8 +1,11 @@
 package uqac.dim.stopforgettest;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -46,6 +50,7 @@ public class ListActivity extends AppCompatActivity {
         container=new ArrayList<>();
         titre=findViewById(R.id.listtitre);
         //current_list=MainActivity.database.getList(id);
+        current_list = new Liste("bidule");
 
         if (id==-1){
             new_titre="";
@@ -59,6 +64,7 @@ public class ListActivity extends AppCompatActivity {
         for (Element e: container
              ) {
             listedetest.add(e.afficher());
+            current_list.add_element(e);
         }
         adapter = new ArrayAdapter<>(this,R.layout.listview2,listedetest);
         listView2 = findViewById(R.id.listeview2);
@@ -104,12 +110,13 @@ public class ListActivity extends AppCompatActivity {
     public void cocher_decocher(View v, int position, long id){
         if(v.getBackground().getConstantState()==getResources().getDrawable(R.drawable.bg_list).getConstantState()){
             v.setBackgroundResource(R.drawable.bg_list2);
-            //container.get(position).cocher();
+            container.get(position).cocher();
         }
         else{
             v.setBackgroundResource(R.drawable.bg_list);
-            //container.get(position).decocher();
+            container.get(position).decocher();
         }
+        refresh();
     }
 
     public void ajout(View v){
@@ -135,7 +142,9 @@ public class ListActivity extends AppCompatActivity {
             SousListe sousListe=new SousListe(s,null,current_list);
             adapter.add(sousListe.afficher());
             container.add(sousListe);
+            current_list.add_element(sousListe);
             dialog.dismiss();
+            refresh();
         }
     }
 
@@ -153,13 +162,18 @@ public class ListActivity extends AppCompatActivity {
             }
             SousListe sousListe = new SousListe(s,sl,current_list);
             sl.nb += 1;
+            sl.liste.add(sousListe);
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
             adapter.insert(sousListe.afficher(),currentpos+1);
             container.remove(e);
             container.add(currentpos,sl);
             container.add(currentpos+1,sousListe);
+            current_list.delete_element(e);
+            current_list.add_element(sl);
+            current_list.add_element(sousListe);
             dialog.dismiss();
+            refresh();
         }
     }
 
@@ -169,7 +183,9 @@ public class ListActivity extends AppCompatActivity {
             Item item=new Item(s,null,current_list);
             adapter.add(item.afficher());
             container.add(item);
+            current_list.add_element(item);
             dialog.dismiss();
+            refresh();
         }
     }
 
@@ -187,13 +203,18 @@ public class ListActivity extends AppCompatActivity {
             }
             Item item = new Item(s,sl,current_list);
             sl.nb += 1;
+            sl.liste.add(item);
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
             adapter.insert(item.afficher(),currentpos+1);
             container.remove(e);
             container.add(currentpos,sl);
             container.add(currentpos+1,item);
+            current_list.delete_element(e);
+            current_list.add_element(sl);
+            current_list.add_element(item);
             dialog.dismiss();
+            refresh();
         }
     }
 
@@ -203,8 +224,25 @@ public class ListActivity extends AppCompatActivity {
 
     public void supprimer(View v){
         String s = adapter.getItem(currentpos);
+        current_list.delete_element(container.get(currentpos));
         container.remove(currentpos);
         adapter.remove(s);
         dialog.dismiss();
+        refresh();
+    }
+
+    public void refresh(){
+        adapter.clear();
+        for(int k =0; k<container.size();k++){
+            Element element = container.get(k);
+            adapter.add(element.afficher());
+            if(true){
+                Log.i("DIMm", "refresh: ??");
+                TextView v = (TextView) listView2.getAdapter().getView(k,null,listView2);
+                String test = v.toString();
+                Log.i("DIMm", "refresh: " +test);
+                v.setBackgroundResource(R.drawable.bg_list2);
+            }
+        }
     }
 }
