@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:onClick="annuler"
         android:layout_gravity="center"
-        android:backgroundTint="@color/rouge"
+        android:backgroundTint="@color/blue2"
         android:text="@string/an" />
 
 </LinearLayout>

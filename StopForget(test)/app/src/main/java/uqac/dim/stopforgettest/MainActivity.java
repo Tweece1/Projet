@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.setView(view);
         dialog=dialogBuilder.create();
         dialog.show();
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.white);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     public void annuler2(View v){

@@ -75,7 +75,12 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 currentpos = i;
-                ajout(view);
+                if(container.get(i).type== Element.Type.ITEM){
+                    supp(view);
+                }
+                else {
+                    ajout(view);
+                }
                 return true;
             }
         });
@@ -242,24 +247,12 @@ public class ListActivity extends AppCompatActivity {
         for(int k =0; k<container.size();k++){
             Element element = container.get(k);
             adapter.add(element.afficher());
-            //TextView v = (TextView) listView2.getChildAt(k);
             TextView v = (TextView) getViewByPosition(k,listView2);
-            if(true){
-                if(element.checked){
-                    v.setBackgroundResource(R.drawable.bg_list2);
-                }
-                else {
-                    v.setBackgroundResource(R.drawable.bg_list);
-                }
+            if(element.checked){
+                v.setBackgroundResource(R.drawable.bg_list2);
             }
-            else{
-                v = (TextView) listView2.getAdapter().getView(k,null,listView2);
-                if(element.checked){
-                    v.setBackgroundResource(R.drawable.bg_list2);
-                }
-                else {
-                    v.setBackgroundResource(R.drawable.bg_list);
-                }
+            else {
+                v.setBackgroundResource(R.drawable.bg_list);
             }
         }
     }
@@ -274,5 +267,14 @@ public class ListActivity extends AppCompatActivity {
             final int childIndex = pos - firstListItemPosition;
             return listView.getChildAt(childIndex);
         }
+    }
+
+    public void supp(View v){
+        dialogBuilder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.pop_up_sup,null);
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 }
