@@ -10,4 +10,6 @@
     <string name="sl">Sous-liste</string>
     <string name="item">Item</string>
     <string name="an">Annuler</string>
+    <string name="supprimer">supprimer</string>
+    <string name="aj_sl">Ajouter un élément dans la sous-liste :</string>
 </resources>

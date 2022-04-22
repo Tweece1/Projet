@@ -34,6 +34,7 @@ public class ListActivity extends AppCompatActivity {
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
     private EditText edttest;
+    private int current;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,8 @@ public class ListActivity extends AppCompatActivity {
         listView2.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                current = i;
+                ajout(view);
                 return true;
             }
         });
@@ -108,7 +111,14 @@ public class ListActivity extends AppCompatActivity {
 
     public void ajout(View v){
         dialogBuilder = new AlertDialog.Builder(this);
-        final View view = getLayoutInflater().inflate(R.layout.pop_up_ajout,null);
+        View view;
+        if(v instanceof TextView)
+        {
+            view = getLayoutInflater().inflate(R.layout.pop_up_ajout_sup,null);
+        }
+        else {
+            view = getLayoutInflater().inflate(R.layout.pop_up_ajout,null);
+        }
         edttest = (EditText) view.findViewById(R.id.nom_ajout);
         dialogBuilder.setView(view);
         dialog = dialogBuilder.create();
@@ -134,6 +144,11 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void annuler(View v){
+        dialog.dismiss();
+    }
+
+    public void supprimer(View v){
+        adapter.remove(adapter.getItem(current));
         dialog.dismiss();
     }
 }
