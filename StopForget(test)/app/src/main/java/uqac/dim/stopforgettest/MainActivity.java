@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 
@@ -56,13 +57,15 @@ public class MainActivity extends AppCompatActivity {
         listView=findViewById(R.id.listeview);
         listView.setAdapter(adapter);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @SuppressLint("ResourceAsColor")
+            @SuppressLint({"ResourceAsColor", "UseCompatLoadingForDrawables"})
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 txt = (TextView) view;
-                boolean can=(txt.getBackground() instanceof GradientDrawable);
+                //boolean can=(txt.getBackground() instanceof GradientDrawable);
+                boolean can=(txt.getBackground().getConstantState()==getResources().getDrawable(R.drawable.bg_main).getConstantState());
                 if (can){
-                    txt.setBackgroundColor(R.color.blue);
+                    //txt.setBackgroundColor(R.color.blue);
+                    txt.setBackgroundResource(R.drawable.bg_main2);
                     to_delete.add(txt);
                 }
                 else {

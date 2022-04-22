@@ -13,12 +13,12 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:contentDescription="@string/desc"
         android:onClick="creation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add"
-        tools:ignore="MissingConstraints"
-        android:contentDescription="@string/desc" />
+        tools:ignore="MissingConstraints,ImageContrastCheck" />
 
     <View
         android:id="@+id/view"
@@ -34,7 +34,7 @@
         android:id="@+id/poubelle"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@color/blue"
+        android:background="@color/transparent"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
         android:onClick="deleteList"

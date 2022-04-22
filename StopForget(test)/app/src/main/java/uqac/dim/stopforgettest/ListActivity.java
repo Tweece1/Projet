@@ -1,19 +1,17 @@
 package uqac.dim.stopforgettest;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -25,6 +23,9 @@ public class ListActivity extends AppCompatActivity {
     private ArrayList<Element> container;
     private long id;
     private int array_id;
+    private ArrayList<String> listedetest;
+    private ArrayAdapter<String> adapter;
+    private ListView listView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,21 @@ public class ListActivity extends AppCompatActivity {
             new_titre=intent.getStringExtra("titre");
             titre.setText(new_titre);
         }
+
+        listedetest = new ArrayList<>();
+        listedetest.add("test");
+        listedetest.add("test1");
+        listedetest.add("test2");
+        adapter = new ArrayAdapter<>(this,R.layout.listview2,listedetest);
+        listView2 = findViewById(R.id.listeview2);
+        listView2.setAdapter(adapter);
+        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                cocher_decocher(view,i,l);
+            }
+        });
+
     }
 
     public void onBack(View v){
@@ -64,5 +80,19 @@ public class ListActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void cocher_decocher(View v, int position, long id){
+        if(v.getBackground().getConstantState()==getResources().getDrawable(R.drawable.bg_list).getConstantState()){
+            v.setBackgroundResource(R.drawable.bg_list2);
+        }
+        else{
+            v.setBackgroundResource(R.drawable.bg_list);
+        }
+    }
+
+    public void ajout(View v){
+
     }
 }
