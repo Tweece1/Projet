@@ -236,12 +236,14 @@ public class ListActivity extends AppCompatActivity {
         for(int k =0; k<container.size();k++){
             Element element = container.get(k);
             adapter.add(element.afficher());
-            if(true){
-                Log.i("DIMm", "refresh: ??");
-                TextView v = (TextView) listView2.getAdapter().getView(k,null,listView2);
-                String test = v.toString();
-                Log.i("DIMm", "refresh: " +test);
-                v.setBackgroundResource(R.drawable.bg_list2);
+            TextView v = (TextView) listView2.getChildAt(k);
+            if(v!=null){
+                if(element.checked){
+                    v.setBackgroundResource(R.drawable.bg_list2);
+                }
+                else {
+                    v.setBackgroundResource(R.drawable.bg_list);
+                }
             }
         }
     }

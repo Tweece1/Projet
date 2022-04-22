@@ -37,6 +37,11 @@ public class Liste {
         }
     }
 
+    public String afficher(){
+        String res = name + "\n" + nbc + " éléments cochés sur " + nb;
+        return res;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
