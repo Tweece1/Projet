@@ -3,12 +3,16 @@ package uqac.dim.stopforgettest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +30,7 @@ public class ListActivity extends AppCompatActivity {
     private ArrayList<String> listedetest;
     private ArrayAdapter<String> adapter;
     private ListView listView2;
+    private PopupWindow popupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,12 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 cocher_decocher(view,i,l);
+            }
+        });
+        listView2.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                return true;
             }
         });
 
@@ -93,6 +104,25 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void ajout(View v){
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.pop_up_ajout,null);
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        popupWindow = new PopupWindow(view, width, height, true);
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+    }
 
+    public void ajout_sousliste(View v){
+
+        popupWindow.dismiss();
+    }
+
+    public void ajout_item(View v){
+        adapter.add("ça marche");
+        popupWindow.dismiss();
+    }
+
+    public void annuler(View v){
+        popupWindow.dismiss();
     }
 }

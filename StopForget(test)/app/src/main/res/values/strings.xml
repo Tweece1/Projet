@@ -5,4 +5,9 @@
     <string name="valider">VALIDER</string>
     <string name="poubelle">poubelle</string>
     <string name="annuler">ANNULER</string>
+    <string name="popup_ajout_title">Ajout d\'un élément :</string>
+    <string name="nom">Nom</string>
+    <string name="sl">Sous-liste</string>
+    <string name="item">Item</string>
+    <string name="an">Annuler</string>
 </resources>
