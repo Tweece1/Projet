@@ -30,7 +30,9 @@ public class Liste {
         liste.remove(e);
         if (e.getClass() == Item.class) {
             nb--;
-            nbc--;
+            if(e.checked){
+                nbc--;
+            }
         } else {
             nb -= ((SousListe)e).nb;
             nbc -= ((SousListe)e).nbc;

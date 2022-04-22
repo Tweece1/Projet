@@ -95,6 +95,7 @@ public class SousListe extends Element{
             }
             else{
                 SousListe s = (SousListe) e;
+                s.checked = false;
                 s.__decocher();
             }
         }
@@ -105,7 +106,7 @@ public class SousListe extends Element{
         while (p!=null)
         {
             p.nbc-=this.nb;
-            if (p.nbc==p.nb-(this.nb)){
+            if (p.nbc==p.nb-(this.nb) && this.nb!=0){
                 p.checked=false;
                 p.__decochersuite();
                 p=null;
@@ -121,6 +122,26 @@ public class SousListe extends Element{
     public String afficher(){
         String res = name + "\n" + nbc + " éléments cochés sur " + nb;
         return res;
+    }
+
+    @Override
+    public void dele(){
+        for(Element e:liste){
+            e=null;
+        }
+        liste.clear();
+        SousListe p = parent;
+        while (p!=null){
+            p.nb-=nb;
+            p.nbc-=nbc;
+            p.liste.remove(this);
+            p = p.parent;
+        }
+    }
+
+    @Override
+    public void ajou(){
+
     }
 
     @Override

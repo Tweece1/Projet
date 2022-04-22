@@ -161,7 +161,7 @@ public class ListActivity extends AppCompatActivity {
                 sl = new SousListe(it.name,it.parent,it.ancetre);
             }
             SousListe sousListe = new SousListe(s,sl,current_list);
-            sl.nb += 1;
+            sousListe.ajou();
             sl.liste.add(sousListe);
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
@@ -202,7 +202,7 @@ public class ListActivity extends AppCompatActivity {
                 sl = new SousListe(it.name,it.parent,it.ancetre);
             }
             Item item = new Item(s,sl,current_list);
-            sl.nb += 1;
+            item.ajou();
             sl.liste.add(item);
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
@@ -225,6 +225,7 @@ public class ListActivity extends AppCompatActivity {
     public void supprimer(View v){
         String s = adapter.getItem(currentpos);
         current_list.delete_element(container.get(currentpos));
+        container.get(currentpos).dele();
         container.remove(currentpos);
         adapter.remove(s);
         dialog.dismiss();
@@ -236,8 +237,9 @@ public class ListActivity extends AppCompatActivity {
         for(int k =0; k<container.size();k++){
             Element element = container.get(k);
             adapter.add(element.afficher());
-            TextView v = (TextView) listView2.getChildAt(k);
-            if(v!=null){
+            //TextView v = (TextView) listView2.getChildAt(k);
+            TextView v = (TextView) getViewByPosition(k,listView2);
+            if(true){
                 if(element.checked){
                     v.setBackgroundResource(R.drawable.bg_list2);
                 }
@@ -245,6 +247,27 @@ public class ListActivity extends AppCompatActivity {
                     v.setBackgroundResource(R.drawable.bg_list);
                 }
             }
+            else{
+                v = (TextView) listView2.getAdapter().getView(k,null,listView2);
+                if(element.checked){
+                    v.setBackgroundResource(R.drawable.bg_list2);
+                }
+                else {
+                    v.setBackgroundResource(R.drawable.bg_list);
+                }
+            }
+        }
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
         }
     }
 }

@@ -55,6 +55,30 @@ public class Item extends Element {
     }
 
     @Override
+    public void dele(){
+        SousListe p = parent;
+        int a=0;
+        if(checked){
+            a=1;
+        }
+        while (p!=null){
+            p.nb-=1;
+            p.nbc-=a;
+            p.liste.remove(this);
+            p = p.parent;
+        }
+    }
+
+    @Override
+    public void ajou(){
+        SousListe p = parent;
+        while(p!=null){
+            p.nb+=1;
+            p = p.parent;
+        }
+    }
+
+    @Override
     public void setId(long id) {
         this.id=id;
     }
