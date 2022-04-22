@@ -3,16 +3,12 @@ package uqac.dim.stopforgettest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +33,7 @@ public class ListActivity extends AppCompatActivity {
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
     private EditText edttest;
-    private int current;
+    private int currentpos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +45,7 @@ public class ListActivity extends AppCompatActivity {
         array_id=intent.getIntExtra("array_id",0);
         container=new ArrayList<>();
         titre=findViewById(R.id.listtitre);
-        current_list=MainActivity.database.getList(id);
+        //current_list=MainActivity.database.getList(id);
 
         if (id==-1){
             new_titre="";
@@ -60,9 +56,10 @@ public class ListActivity extends AppCompatActivity {
         }
 
         listedetest = new ArrayList<>();
-        listedetest.add("test");
-        listedetest.add("test1");
-        listedetest.add("test2");
+        for (Element e: container
+             ) {
+            listedetest.add(e.afficher());
+        }
         adapter = new ArrayAdapter<>(this,R.layout.listview2,listedetest);
         listView2 = findViewById(R.id.listeview2);
         listView2.setAdapter(adapter);
@@ -75,7 +72,7 @@ public class ListActivity extends AppCompatActivity {
         listView2.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                current = i;
+                currentpos = i;
                 ajout(view);
                 return true;
             }
@@ -107,9 +104,11 @@ public class ListActivity extends AppCompatActivity {
     public void cocher_decocher(View v, int position, long id){
         if(v.getBackground().getConstantState()==getResources().getDrawable(R.drawable.bg_list).getConstantState()){
             v.setBackgroundResource(R.drawable.bg_list2);
+            //container.get(position).cocher();
         }
         else{
             v.setBackgroundResource(R.drawable.bg_list);
+            //container.get(position).decocher();
         }
     }
 
@@ -133,22 +132,69 @@ public class ListActivity extends AppCompatActivity {
     public void ajout_sousliste(View v){
         if(!edttest.getText().toString().equals("")){
             String s = edttest.getText().toString();
-            adapter.add(s);
             SousListe sousListe=new SousListe(s,null,current_list);
+            adapter.add(sousListe.afficher());
             container.add(sousListe);
+            dialog.dismiss();
         }
+    }
 
-        dialog.dismiss();
+    public void ajout_sousliste2(View v){
+        if(!edttest.getText().toString().equals("")){
+            String s = edttest.getText().toString();
+            Element e = container.get(currentpos);
+            SousListe sl;
+            if(e instanceof SousListe){
+                sl = (SousListe) e;
+            }
+            else{
+                Item it = (Item) e;
+                sl = new SousListe(it.name,it.parent,it.ancetre);
+            }
+            SousListe sousListe = new SousListe(s,sl,current_list);
+            sl.nb += 1;
+            adapter.remove(adapter.getItem(currentpos));
+            adapter.insert(sl.afficher(),currentpos);
+            adapter.insert(sousListe.afficher(),currentpos+1);
+            container.remove(e);
+            container.add(currentpos,sl);
+            container.add(currentpos+1,sousListe);
+            dialog.dismiss();
+        }
     }
 
     public void ajout_item(View v){
         if(!edttest.getText().toString().equals("")){
             String s = edttest.getText().toString();
-            adapter.add(s);
             Item item=new Item(s,null,current_list);
+            adapter.add(item.afficher());
             container.add(item);
+            dialog.dismiss();
         }
-        dialog.dismiss();
+    }
+
+    public void ajout_item2(View v){
+        if(!edttest.getText().toString().equals("")){
+            String s = edttest.getText().toString();
+            Element e = container.get(currentpos);
+            SousListe sl;
+            if(e instanceof SousListe){
+                sl = (SousListe) e;
+            }
+            else{
+                Item it = (Item) e;
+                sl = new SousListe(it.name,it.parent,it.ancetre);
+            }
+            Item item = new Item(s,sl,current_list);
+            sl.nb += 1;
+            adapter.remove(adapter.getItem(currentpos));
+            adapter.insert(sl.afficher(),currentpos);
+            adapter.insert(item.afficher(),currentpos+1);
+            container.remove(e);
+            container.add(currentpos,sl);
+            container.add(currentpos+1,item);
+            dialog.dismiss();
+        }
     }
 
     public void annuler(View v){
@@ -156,7 +202,9 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void supprimer(View v){
-        adapter.remove(adapter.getItem(current));
+        String s = adapter.getItem(currentpos);
+        container.remove(currentpos);
+        adapter.remove(s);
         dialog.dismiss();
     }
 }

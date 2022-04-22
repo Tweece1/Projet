@@ -64,6 +64,7 @@
         android:layout_width="68dp"
         android:layout_height="62dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/cloche"
         android:background="@color/blue"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="@+id/view"

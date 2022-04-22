@@ -49,6 +49,10 @@ public class Item extends Element {
         }
     }
 
+    @Override
+    public String afficher(){
+        return name;
+    }
 
     @Override
     public void setId(long id) {

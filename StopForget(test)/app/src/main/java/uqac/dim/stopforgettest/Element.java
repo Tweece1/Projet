@@ -15,6 +15,7 @@ public abstract class Element {
     public abstract void cocher();
     public abstract void cocher2();
     public abstract void decocher();
+    public abstract String afficher();
     public abstract void setId(long id);
     public abstract long getId();
 }

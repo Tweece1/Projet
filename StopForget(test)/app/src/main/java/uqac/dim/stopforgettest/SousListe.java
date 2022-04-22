@@ -116,6 +116,13 @@ public class SousListe extends Element{
         }
     }
 
+
+    @Override
+    public String afficher(){
+        String res = name + "\n" + nbc + " éléments cochés sur " + nb;
+        return res;
+    }
+
     @Override
     public void setId(long id) {
         this.id=id;

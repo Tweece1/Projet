@@ -39,14 +39,14 @@
         <Button
             android:layout_width="125sp"
             android:layout_height="wrap_content"
-            android:onClick="ajout_sousliste"
+            android:onClick="ajout_sousliste2"
             android:text="@string/sl" />
 
         <Button
             android:layout_width="125sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20sp"
-            android:onClick="ajout_item"
+            android:onClick="ajout_item2"
             android:text="@string/item" />
 
     </LinearLayout>
