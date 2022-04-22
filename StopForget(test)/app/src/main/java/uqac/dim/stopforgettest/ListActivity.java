@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -30,7 +31,9 @@ public class ListActivity extends AppCompatActivity {
     private ArrayList<String> listedetest;
     private ArrayAdapter<String> adapter;
     private ListView listView2;
-    private PopupWindow popupWindow;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private EditText edttest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,25 +107,33 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void ajout(View v){
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.pop_up_ajout,null);
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        popupWindow = new PopupWindow(view, width, height, true);
-        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View view = getLayoutInflater().inflate(R.layout.pop_up_ajout,null);
+        edttest = (EditText) view.findViewById(R.id.nom_ajout);
+        dialogBuilder.setView(view);
+        dialog = dialogBuilder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     public void ajout_sousliste(View v){
+        if(!edttest.getText().toString().equals("")){
+            String s = edttest.getText().toString();
+            adapter.add(s);
+        }
 
-        popupWindow.dismiss();
+        dialog.dismiss();
     }
 
     public void ajout_item(View v){
-        adapter.add("ça marche");
-        popupWindow.dismiss();
+        if(!edttest.getText().toString().equals("")){
+            String s = edttest.getText().toString();
+            adapter.add(s);
+        }
+        dialog.dismiss();
     }
 
     public void annuler(View v){
-        popupWindow.dismiss();
+        dialog.dismiss();
     }
 }
