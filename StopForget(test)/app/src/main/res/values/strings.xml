@@ -5,6 +5,10 @@
     <string name="valider">VALIDER</string>
     <string name="poubelle">poubelle</string>
     <string name="annuler">ANNULER</string>
+    <string name="day">Day(:01)</string>
+    <string name="month">Month(:02)</string>
+    <string name="hour">Hour(ex: 12)</string>
+    <string name="minute">Min(ex: 30)</string>
     <string name="popup_ajout_title">Ajout d\'un élément :</string>
     <string name="nom">Nom</string>
     <string name="sl">Sous-liste</string>

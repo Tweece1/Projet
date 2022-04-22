@@ -72,6 +72,7 @@
         app:layout_constraintStart_toEndOf="@+id/poubelle"
         app:layout_constraintTop_toTopOf="@+id/view"
         app:srcCompat="@drawable/rappel"
+        android:onClick="makeAlarm"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

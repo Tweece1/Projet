@@ -26,10 +26,13 @@ public class ListActivity extends AppCompatActivity {
     private EditText titre;
     private String new_titre;
     private ArrayList<Element> container;
+    private Liste current_list;
     private long id;
     private int array_id;
+
     private ArrayList<String> listedetest;
     private ArrayAdapter<String> adapter;
+
     private ListView listView2;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
@@ -46,6 +49,7 @@ public class ListActivity extends AppCompatActivity {
         array_id=intent.getIntExtra("array_id",0);
         container=new ArrayList<>();
         titre=findViewById(R.id.listtitre);
+        current_list=MainActivity.database.getList(id);
 
         if (id==-1){
             new_titre="";
@@ -130,6 +134,8 @@ public class ListActivity extends AppCompatActivity {
         if(!edttest.getText().toString().equals("")){
             String s = edttest.getText().toString();
             adapter.add(s);
+            SousListe sousListe=new SousListe(s,null,current_list);
+            container.add(sousListe);
         }
 
         dialog.dismiss();
@@ -139,6 +145,8 @@ public class ListActivity extends AppCompatActivity {
         if(!edttest.getText().toString().equals("")){
             String s = edttest.getText().toString();
             adapter.add(s);
+            Item item=new Item(s,null,current_list);
+            container.add(item);
         }
         dialog.dismiss();
     }

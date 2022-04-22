@@ -4,19 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 
@@ -27,17 +26,26 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private ListView listView;
     public static DataBase database;
+
     private TextView txt=null;
-    private ArrayList<TextView> to_delete;
 
-    private NotificationManager nm;
-    private int count;
-    private static String CHANNEL_ID = "glucose";
-    private static String CHANNEL_NAME = "wesh";
-    private static String CHANNEL_DESCRIPTION = "pourquoi";
-    private static int NOTIFICATION_ID = 1111;
+    private ArrayList<TextView> to_do;
 
-    private ImageButton buttonPopup;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+
+    private EditText day;
+    private EditText month;
+    private EditText hour;
+    private EditText min;
+
+    public static NotificationManager nm;
+    public static String CHANNEL_ID = "glucose";
+    public static String CHANNEL_NAME = "wesh";
+    public static String CHANNEL_DESCRIPTION = "pourquoi";
+    public static int NOTIFICATION_ID = 1111;
+
+    public static int[] date_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
         listes_name=database.getAllListsName();
         listes=database.getAllLists();
-        to_delete=new ArrayList<>();
+        to_do =new ArrayList<>();
+        date_time=new int[4];
 
         adapter=new ArrayAdapter<>(this,R.layout.listview, listes_name);
+
 
         listView=findViewById(R.id.listeview);
         listView.setAdapter(adapter);
@@ -66,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
                 if (can){
                     //txt.setBackgroundColor(R.color.blue);
                     txt.setBackgroundResource(R.drawable.bg_main2);
-                    to_delete.add(txt);
+                    to_do.add(txt);
                 }
                 else {
                     txt.setBackground(getDrawable(R.drawable.bg_main));
-                    to_delete.remove(txt);
+                    to_do.remove(txt);
                 }
                 return true;
             }
@@ -81,16 +91,46 @@ public class MainActivity extends AppCompatActivity {
                 select(view);
             }
         });
+    }
 
-        // Create a button handler and call the dialog box display method in it
-        buttonPopup = findViewById(R.id.buttonPopup);
-        buttonPopup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopClass popUpClass = new PopClass();
-                popUpClass.showPopupWindow(v);
-            }
-        });
+    public void makeAlarm(View v){
+        dialogBuilder=new AlertDialog.Builder(this);
+        View view=getLayoutInflater().inflate(R.layout.pop_up_layout,null);
+
+        day=(EditText)view.findViewById(R.id.day);
+        month=(EditText)view.findViewById(R.id.month);
+        hour=(EditText)view.findViewById(R.id.hour);
+        min=(EditText)view.findViewById(R.id.min);
+
+        dialogBuilder.setView(view);
+        dialog=dialogBuilder.create();
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.white);
+    }
+
+    public void annuler2(View v){
+        dialog.dismiss();
+    }
+
+    public void checkDate(View v){
+        date_time[0]=Integer.parseInt(day.getText().toString());
+        date_time[1]=Integer.parseInt(hour.getText().toString());
+        date_time[2]=Integer.parseInt(min.getText().toString());
+        date_time[3]=Integer.parseInt(month.getText().toString());
+
+        Intent i=new Intent(this,MonServiceAlarm.class);
+        String[] all_lists=new String[to_do.size()];
+        int j=0;
+        for (TextView t:to_do){
+            all_lists[j]=t.getText().toString();
+            j++;
+        }
+        Log.i("DIM",all_lists[0]);
+        i.putExtra("all",all_lists);
+        i.putExtra("test",date_time);
+        startService(i);
+
+        dialog.dismiss();
     }
 
     private void createNotificationChannel() {
@@ -162,14 +202,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteList(View v){
-        for (TextView textView : to_delete){
+        for (TextView textView : to_do){
             String name=textView.getText().toString();
             Liste liste=searchList(name);
             database.delete(liste.getId());
             adapter.remove(name);
         }
         adapter.notifyDataSetChanged();
-        to_delete.clear();
+        to_do.clear();
     }
 
     public Liste searchList(String name){
