@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -131,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 all_lists[j]=t.getText().toString();
                 j++;
             }
-            Log.i("DIM",all_lists[0]);
             i.putExtra("all",all_lists);
             i.putExtra("test",date_time);
             startService(i);

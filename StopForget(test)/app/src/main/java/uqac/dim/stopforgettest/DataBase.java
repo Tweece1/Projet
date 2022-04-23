@@ -16,7 +16,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -226,7 +225,6 @@ public class DataBase {
                     @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
                     @SuppressLint("Range") int che=c.getInt(c.getColumnIndex(CHECKED));
                     @SuppressLint("Range") int p=c.getInt(c.getColumnIndex(PARENT_ID));
-                    Log.i("DIM", "ici "+String.valueOf(p));
                     @SuppressLint("Range") int id1=c.getInt(c.getColumnIndex(ID));
                     if (p==ancetre_id) {
                         Item item=new Item(name,null,ancetre);
@@ -235,7 +233,6 @@ public class DataBase {
                         res.add(item);
                     }
                     else{
-                        Log.i("DIM", String.valueOf(((SousListe)getElement(p)).getId()));
                         Item item=new Item(name,(SousListe)getElement(p),ancetre);
                         item.checked=isChecked(che);
                         item.setId(id1);
@@ -249,7 +246,6 @@ public class DataBase {
                     @SuppressLint("Range") int nb=c.getInt(c.getColumnIndex(NB));
                     @SuppressLint("Range") int nbc=c.getInt(c.getColumnIndex(NBC));
                     @SuppressLint("Range") int id1=c.getInt(c.getColumnIndex(ID));
-                    Log.i("DIM", "ici "+String.valueOf(p));
                     if (p==ancetre_id) {
                         SousListe sousListe=new SousListe(name,null,ancetre);
                         sousListe.checked=isChecked(che);
