@@ -101,7 +101,6 @@ public class DataBase {
         }
 
         e.setId(database.insert(TABLE_LISTES,null,values));
-        Log.i("DIM", String.valueOf(e.getId()));
     }
 
     public Element getElement(long id){
@@ -121,15 +120,18 @@ public class DataBase {
         @SuppressLint("Range") int type=c.getInt(c.getColumnIndex(TYPE));
         @SuppressLint("Range") int checked=c.getInt(c.getColumnIndex(CHECKED));
         @SuppressLint("Range") long ancetre_id=c.getLong(c.getColumnIndex(ANCETRE_ID));
+        @SuppressLint("Range") long id1=c.getLong(c.getColumnIndex(ID));
         c.close();
         if (type==0){
             Item item;
             if (parent_id==ancetre_id)
                 item=new Item(name,null,getList(ancetre_id));
-            else
+            else{
                 item=new Item(name,(SousListe)getElement(parent_id),getList(ancetre_id));
+            }
             item.checked=isChecked(checked);
             item.type=Element.Type.ITEM;
+            item.setId(id1);
             return item;
         }
         else{
@@ -142,6 +144,7 @@ public class DataBase {
             sousListe.type=Element.Type.SOUSLISTE;
             sousListe.nb=nb;
             sousListe.nbc=nbc;
+            sousListe.setId(id1);
             return sousListe;
         }
     }
@@ -223,22 +226,17 @@ public class DataBase {
                     @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
                     @SuppressLint("Range") int che=c.getInt(c.getColumnIndex(CHECKED));
                     @SuppressLint("Range") int p=c.getInt(c.getColumnIndex(PARENT_ID));
+                    Log.i("DIM", "ici "+String.valueOf(p));
                     @SuppressLint("Range") int id1=c.getInt(c.getColumnIndex(ID));
-                    Log.i("DIM","le bon " + name);
-                    Log.i("DIM", String.valueOf(p));
-                    Log.i("DIM", String.valueOf(ancetre_id));
                     if (p==ancetre_id) {
                         Item item=new Item(name,null,ancetre);
-                        Log.i("DIM",name);
                         item.checked=isChecked(che);
                         item.setId(id1);
                         res.add(item);
                     }
                     else{
-                        Log.i("DIM","p passe ici");
-                        Log.i("DIM",getElement(p).name);
+                        Log.i("DIM", String.valueOf(((SousListe)getElement(p)).getId()));
                         Item item=new Item(name,(SousListe)getElement(p),ancetre);
-                        Log.i("DIM",name);
                         item.checked=isChecked(che);
                         item.setId(id1);
                         res.add(item);
@@ -251,10 +249,9 @@ public class DataBase {
                     @SuppressLint("Range") int nb=c.getInt(c.getColumnIndex(NB));
                     @SuppressLint("Range") int nbc=c.getInt(c.getColumnIndex(NBC));
                     @SuppressLint("Range") int id1=c.getInt(c.getColumnIndex(ID));
-                    Log.i("DIM", String.valueOf(id1));
+                    Log.i("DIM", "ici "+String.valueOf(p));
                     if (p==ancetre_id) {
                         SousListe sousListe=new SousListe(name,null,ancetre);
-                        Log.i("DIM",name);
                         sousListe.checked=isChecked(che);
                         sousListe.nb=nb;
                         sousListe.nbc=nbc;
@@ -263,7 +260,6 @@ public class DataBase {
                     }
                     else{
                         SousListe sousListe=new SousListe(name,(SousListe)getElement(p),ancetre);
-                        Log.i("DIM",name);
                         sousListe.checked=isChecked(che);
                         sousListe.nb=nb;
                         sousListe.nbc=nbc;

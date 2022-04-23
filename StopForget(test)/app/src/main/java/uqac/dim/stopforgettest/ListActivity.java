@@ -2,9 +2,12 @@ package uqac.dim.stopforgettest;
 
 import static android.content.ContentValues.TAG;
 
+import static uqac.dim.stopforgettest.MainActivity.database;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +41,7 @@ public class ListActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private EditText edttest;
     private int currentpos;
+    private ArrayList<Element> copy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,18 +51,30 @@ public class ListActivity extends AppCompatActivity {
         Intent intent=getIntent();
         id=intent.getLongExtra("id",-1);
         array_id=intent.getIntExtra("array_id",0);
-        Log.i("DIM", String.valueOf(id));
-        container=MainActivity.database.getAllListsElement(id);
+        copy= database.getAllListsElement(id);
+        container=new ArrayList<>();
         titre=findViewById(R.id.listtitre);
 
-        current_list=MainActivity.database.getList(id);
+
+        int i=0;
+        while (i<copy.size()){
+            Element e=copy.get(i);
+            if (e.parent==null){
+                container.add(e);
+                if (e.type== Element.Type.SOUSLISTE){
+                    getElementOfSl(i+1,e);
+                }
+            }
+            i++;
+        }
+
+        current_list= database.getList(id);
 
         new_titre=intent.getStringExtra("titre");
         titre.setText(new_titre);
 
         listedetest = new ArrayList<>();
         for (Element e: container) {
-            Log.i("DIM", String.valueOf(e.getId()));
             listedetest.add(e.afficher());
             current_list.add_element(e);
         }
@@ -84,10 +100,31 @@ public class ListActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
 
+    public void getElementOfSl(int i, Element e){
+        while (i<copy.size()){
+            Element element=copy.get(i);
+            String parent_name="";
+            if (element.parent!=null){
+                parent_name=element.parent.name;
+            }
+            if (parent_name.equals(e.name)){
+                container.add(element);
+                SousListe sl=(SousListe)e;
+                sl.liste.add(element);
+                if (element.type.equals(Element.Type.SOUSLISTE))
+                    getElementOfSl(i+1,element);
+            }
+            i++;
+        }
+    }
+
+
     public void onBack(View v){
+        for (Element e:container){
+            database.updateElement(e);
+        }
         Intent intent=new Intent();
         new_titre=titre.getText().toString();
         intent.putExtra("titre",new_titre);
@@ -144,7 +181,7 @@ public class ListActivity extends AppCompatActivity {
             adapter.add(sousListe.afficher());
             container.add(sousListe);
             current_list.add_element(sousListe);
-            MainActivity.database.addElement(sousListe);
+            database.addElement(sousListe);
             dialog.dismiss();
             refresh();
         }
@@ -166,7 +203,7 @@ public class ListActivity extends AppCompatActivity {
             SousListe sousListe = new SousListe(s,sl,current_list);
             sousListe.ajou();
             sl.liste.add(sousListe);
-            MainActivity.database.updateElement(sl);
+            database.updateElement(sl);
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
             adapter.insert(sousListe.afficher(),currentpos+1);
@@ -176,6 +213,7 @@ public class ListActivity extends AppCompatActivity {
             current_list.delete_element(e);
             current_list.add_element(sl);
             current_list.add_element(sousListe);
+            database.addElement(sousListe);
             dialog.dismiss();
             refresh();
         }
@@ -188,7 +226,7 @@ public class ListActivity extends AppCompatActivity {
             adapter.add(item.afficher());
             container.add(item);
             current_list.add_element(item);
-            MainActivity.database.addElement(item);
+            database.addElement(item);
             dialog.dismiss();
             refresh();
         }
@@ -210,17 +248,23 @@ public class ListActivity extends AppCompatActivity {
             Item item = new Item(s,sl,current_list);
             item.ajou();
             sl.liste.add(item);
-            MainActivity.database.updateElement(sl);
+
+            database.updateElement(sl);
+
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
             adapter.insert(item.afficher(),currentpos+1);
+
             container.remove(e);
             container.add(currentpos,sl);
             container.add(currentpos+1,item);
+
             current_list.delete_element(e);
             current_list.add_element(sl);
             current_list.add_element(item);
-            MainActivity.database.addElement(item);
+
+            database.addElement(item);
+
             dialog.dismiss();
             refresh();
         }
@@ -237,7 +281,7 @@ public class ListActivity extends AppCompatActivity {
         Element e=container.get(currentpos);
         container.remove(currentpos);
         adapter.remove(s);
-        MainActivity.database.delete(e.getId());
+        database.delete(e.getId());
         dialog.dismiss();
         refresh();
     }

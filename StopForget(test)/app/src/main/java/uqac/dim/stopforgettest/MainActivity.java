@@ -56,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
         database.open();
         createNotificationChannel();
 
+        for (int i=50;i<53;i++){
+            database.delete(i);
+        }
+
         listes_name=database.getAllListsName();
         listes=database.getAllLists();
         to_do =new ArrayList<>();
@@ -113,22 +117,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkDate(View v){
-        date_time[0]=Integer.parseInt(day.getText().toString());
-        date_time[1]=Integer.parseInt(hour.getText().toString());
-        date_time[2]=Integer.parseInt(min.getText().toString());
-        date_time[3]=Integer.parseInt(month.getText().toString());
+        if (!day.getText().toString().equals("") && !hour.getText().toString().equals("") && !month.getText().toString().equals("")
+            && !min.getText().toString().equals("")) {
+            date_time[0]=Integer.parseInt(day.getText().toString());
+            date_time[1]=Integer.parseInt(hour.getText().toString());
+            date_time[2]=Integer.parseInt(min.getText().toString());
+            date_time[3]=Integer.parseInt(month.getText().toString());
 
-        Intent i=new Intent(this,MonServiceAlarm.class);
-        String[] all_lists=new String[to_do.size()];
-        int j=0;
-        for (TextView t:to_do){
-            all_lists[j]=t.getText().toString();
-            j++;
+            Intent i=new Intent(this,MonServiceAlarm.class);
+            String[] all_lists=new String[to_do.size()];
+            int j=0;
+            for (TextView t:to_do){
+                all_lists[j]=t.getText().toString();
+                j++;
+            }
+            Log.i("DIM",all_lists[0]);
+            i.putExtra("all",all_lists);
+            i.putExtra("test",date_time);
+            startService(i);
         }
-        Log.i("DIM",all_lists[0]);
-        i.putExtra("all",all_lists);
-        i.putExtra("test",date_time);
-        startService(i);
 
         dialog.dismiss();
     }
