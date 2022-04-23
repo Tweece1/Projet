@@ -17,4 +17,6 @@
     <string name="supprimer">supprimer</string>
     <string name="aj_sl">Ajouter un élément dans la sous-liste :</string>
     <string name="cloche">cloche</string>
+    <string name="augmenter">augmenter</string>
+    <string name="reduire">reduire</string>
 </resources>

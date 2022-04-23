@@ -7,6 +7,7 @@ import static uqac.dim.stopforgettest.MainActivity.database;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -42,6 +43,8 @@ public class ListActivity extends AppCompatActivity {
     private EditText edttest;
     private int currentpos;
     private ArrayList<Element> copy;
+    private ArrayList<Element> aff;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class ListActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         id=intent.getLongExtra("id",-1);
+        Log.i("DIM", String.valueOf(id));
         array_id=intent.getIntExtra("array_id",0);
         copy= database.getAllListsElement(id);
         container=new ArrayList<>();
@@ -74,9 +78,14 @@ public class ListActivity extends AppCompatActivity {
         titre.setText(new_titre);
 
         listedetest = new ArrayList<>();
+        aff = new ArrayList<>();
         for (Element e: container) {
-            listedetest.add(e.afficher());
+            //listedetest.add(e.afficher());
             current_list.add_element(e);
+            if(e.parent==null){
+                aff.add(e);
+                listedetest.add(e.afficher());
+            }
         }
         adapter = new ArrayAdapter<>(this,R.layout.listview2,listedetest);
         listView2 = findViewById(R.id.listeview2);
@@ -118,6 +127,13 @@ public class ListActivity extends AppCompatActivity {
             }
             i++;
         }
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                refresh();
+            }
+        };
+        new Handler().postDelayed(runnable,100);
     }
 
 
@@ -181,6 +197,7 @@ public class ListActivity extends AppCompatActivity {
             adapter.add(sousListe.afficher());
             container.add(sousListe);
             current_list.add_element(sousListe);
+            aff.add(sousListe);
             database.addElement(sousListe);
             dialog.dismiss();
             refresh();
@@ -225,6 +242,7 @@ public class ListActivity extends AppCompatActivity {
             Item item=new Item(s,null,current_list);
             adapter.add(item.afficher());
             container.add(item);
+            aff.add(item);
             current_list.add_element(item);
             database.addElement(item);
             dialog.dismiss();
@@ -280,6 +298,7 @@ public class ListActivity extends AppCompatActivity {
         container.get(currentpos).dele();
         Element e=container.get(currentpos);
         container.remove(currentpos);
+        aff.remove(e);
         adapter.remove(s);
         database.delete(e.getId());
         dialog.dismiss();
@@ -290,13 +309,15 @@ public class ListActivity extends AppCompatActivity {
         adapter.clear();
         for(int k =0; k<container.size();k++){
             Element element = container.get(k);
-            adapter.add(element.afficher());
-            TextView v = (TextView) getViewByPosition(k,listView2);
-            if(element.checked){
-                v.setBackgroundResource(R.drawable.bg_list2);
-            }
-            else {
-                v.setBackgroundResource(R.drawable.bg_list);
+            if(aff.contains(element)){
+                adapter.add(element.afficher());
+                TextView v = (TextView) getViewByPosition(k,listView2);
+                if(element.checked){
+                    v.setBackgroundResource(R.drawable.bg_list2);
+                }
+                else {
+                    v.setBackgroundResource(R.drawable.bg_list);
+                }
             }
         }
     }
@@ -320,5 +341,27 @@ public class ListActivity extends AppCompatActivity {
         dialog = dialogBuilder.create();
         dialog.show();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }
+
+    public void reduire(View v){
+        SousListe sl = (SousListe) container.get(currentpos);
+        for(Element e:sl.liste){
+            aff.remove(e);
+        }
+        dialog.dismiss();
+        new Handler().postDelayed(runnable,100);
+        //refresh();
+    }
+
+    public void augmenter(View v){
+        SousListe sl = (SousListe) container.get(currentpos);
+        int po = aff.indexOf(sl);
+        for(Element e:sl.liste){
+            aff.add(po+1,e);
+            po+=1;
+        }
+        dialog.dismiss();
+        new Handler().postDelayed(runnable,100);
+        //refresh();
     }
 }

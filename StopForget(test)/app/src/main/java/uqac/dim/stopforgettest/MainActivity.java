@@ -6,12 +6,14 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,8 +61,12 @@ public class MainActivity extends AppCompatActivity {
             database.delete(i);
         }
 
-        listes_name=database.getAllListsName();
+
         listes=database.getAllLists();
+        listes_name = new ArrayList<>();
+        for (Liste l:listes){
+            listes_name.add(l.afficher());
+        }
         to_do =new ArrayList<>();
         date_time=new int[4];
 
@@ -133,9 +139,12 @@ public class MainActivity extends AppCompatActivity {
             i.putExtra("all",all_lists);
             i.putExtra("test",date_time);
             startService(i);
+            dialog.dismiss();
+        }
+        else{
+            Toast.makeText(this, "Date non valide", Toast.LENGTH_SHORT).show();
         }
 
-        dialog.dismiss();
     }
 
     private void createNotificationChannel() {
@@ -151,11 +160,11 @@ public class MainActivity extends AppCompatActivity {
     public void creation(View v){
         Intent intent=new Intent(MainActivity.this,ListActivity.class);
         Liste l=new Liste("");
-        adapter.add(l.name);
+        adapter.add(l.afficher());
         database.addList(l);
         listes.add(l);
         intent.putExtra("id",l.getId());
-        intent.putExtra("array_id",adapter.getPosition(l.name));
+        intent.putExtra("array_id",adapter.getPosition(l.afficher()));
         startActivityForResult(intent,2);
     }
 
@@ -168,8 +177,9 @@ public class MainActivity extends AppCompatActivity {
             Liste l=database.getList(id);
             l.name=data.getStringExtra("titre");
             database.updateList(l);
+            Log.i("DIM", String.valueOf(array_id));
             listes.set(array_id,l);
-            listes_name.set(array_id,l.name);
+            listes_name.set(array_id,l.afficher());
             adapter.notifyDataSetChanged();
         }
     }
@@ -196,8 +206,10 @@ public class MainActivity extends AppCompatActivity {
     public void select(View v){
         Intent intent=new Intent(MainActivity.this,ListActivity.class);
         String name=((TextView)v).getText().toString();
-        intent.putExtra("titre",name);
-        Liste l=searchList(name);
+        String [] sp = name.split("\n");
+        Log.i("DIM",sp[0]);
+        intent.putExtra("titre",sp[0]);
+        Liste l=searchList(sp[0]);
         intent.putExtra("id",l.getId());
         intent.putExtra("array_id",adapter.getPosition(name));
         startActivityForResult(intent,2);
@@ -206,7 +218,9 @@ public class MainActivity extends AppCompatActivity {
     public void deleteList(View v){
         for (TextView textView : to_do){
             String name=textView.getText().toString();
-            Liste liste=searchList(name);
+            String [] sp = name.split("\n");
+            Log.i("DIM",sp[0]+"1");
+            Liste liste=searchList(sp[0]);
             database.deleteAllListsElement(liste.getId());
             database.delete(liste.getId());
             adapter.remove(name);
@@ -221,6 +235,9 @@ public class MainActivity extends AppCompatActivity {
         int index=0;
         while (!found){
             String is_name=(listes.get(index)).name;
+            Log.i("DIM", String.valueOf(is_name.equals(name)));
+            Log.i("DIM",is_name);
+            Log.i("DIM",name);
             if (is_name.equals(name)){
                 found=true;
                 res=listes.get(index);
