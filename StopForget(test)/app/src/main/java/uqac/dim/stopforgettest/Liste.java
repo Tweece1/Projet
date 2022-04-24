@@ -37,9 +37,19 @@ public class Liste {
                 nbc--;
             }
         } else {
-            Log.i("DIM", String.valueOf(((SousListe)e).nb));
-            nb-=((SousListe)e).nb;
-            nbc-=((SousListe)e).nbc;
+            delete_sl((SousListe) e);
+            //nb-=((SousListe)e).nb;
+            //nbc-=((SousListe)e).nbc;
+        }
+    }
+
+    public void delete_sl(SousListe e){
+        ArrayList<Element> l = e.liste;
+        for(Element el:l){
+            if (el.type != Element.Type.ITEM) {
+                delete_sl((SousListe) el);
+            }
+            liste.remove(el);
         }
     }
 

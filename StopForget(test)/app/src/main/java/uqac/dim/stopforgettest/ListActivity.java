@@ -341,9 +341,9 @@ public class ListActivity extends AppCompatActivity {
 
     public void supprimer(View v){
         String s = adapter.getItem(currentpos);
-        current_list.delete_element(container.get(currentpos));
+        Element e = container.get(currentpos);
+        current_list.delete_element(e);
         container.get(currentpos).dele();
-        Element e=container.get(currentpos);
         container.remove(currentpos);
         aff.remove(e);
         adapter.remove(s);
@@ -444,5 +444,9 @@ public class ListActivity extends AppCompatActivity {
             l+=1;
         }
         return bo;
+    }
+
+    public void sup2(Element e){
+
     }
 }
