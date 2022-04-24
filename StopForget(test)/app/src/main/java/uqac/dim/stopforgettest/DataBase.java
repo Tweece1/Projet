@@ -196,9 +196,11 @@ public class DataBase {
             if (ancetre_id==-1) {
                 @SuppressLint("Range") String name=c.getString(c.getColumnIndex(NAME));
                 @SuppressLint("Range") int nb=c.getInt(c.getColumnIndex(NB));
+                @SuppressLint("Range") int nbc=c.getInt(c.getColumnIndex(NBC));
                 @SuppressLint("Range") int id=c.getInt(c.getColumnIndex(ID));
                 Liste l=new Liste(name);
                 l.nb=nb;
+                l.nbc=nbc;
                 l.setId(id);
                 l.type= Element.Type.LISTE;
                 list.add(l);

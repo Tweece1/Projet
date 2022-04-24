@@ -1,5 +1,7 @@
 package uqac.dim.stopforgettest;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Liste {
@@ -22,6 +24,7 @@ public class Liste {
     public void add_element(Element e) {
         liste.add(e);
         if (e.type == Element.Type.ITEM) {
+            Log.i("DIM","je passe ici");
             nb++;
         }
     }

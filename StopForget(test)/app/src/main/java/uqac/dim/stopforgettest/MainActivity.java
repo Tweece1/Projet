@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> listes_name;
-    private ArrayList<Liste> listes;
+    public static ArrayList<Liste> listes;
     private ArrayAdapter<String> adapter;
     private ListView listView;
     public static DataBase database;
@@ -207,11 +207,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(MainActivity.this,ListActivity.class);
         String name=((TextView)v).getText().toString();
         String [] sp = name.split("\n");
-        Log.i("DIM",sp[0]);
         intent.putExtra("titre",sp[0]);
-        Liste l=searchList(sp[0]);
+        int array_id=adapter.getPosition(name);
+        Liste l=searchList(array_id);
+        Log.i("DIM", "array id : "+String.valueOf(array_id));
         intent.putExtra("id",l.getId());
-        intent.putExtra("array_id",adapter.getPosition(name));
+        intent.putExtra("array_id",array_id);
         startActivityForResult(intent,2);
     }
 
@@ -219,8 +220,7 @@ public class MainActivity extends AppCompatActivity {
         for (TextView textView : to_do){
             String name=textView.getText().toString();
             String [] sp = name.split("\n");
-            Log.i("DIM",sp[0]+"1");
-            Liste liste=searchList(sp[0]);
+            Liste liste=searchList(adapter.getPosition(name));
             database.deleteAllListsElement(liste.getId());
             database.delete(liste.getId());
             adapter.remove(name);
@@ -229,21 +229,9 @@ public class MainActivity extends AppCompatActivity {
         to_do.clear();
     }
 
-    public Liste searchList(String name){
-        boolean found=false;
-        Liste res=new Liste(name);
-        int index=0;
-        while (!found){
-            String is_name=(listes.get(index)).name;
-            Log.i("DIM", String.valueOf(is_name.equals(name)));
-            Log.i("DIM",is_name);
-            Log.i("DIM",name);
-            if (is_name.equals(name)){
-                found=true;
-                res=listes.get(index);
-            }
-            index++;
-        }
+    public Liste searchList(int id){
+        Liste res=new Liste(" ");
+        res=listes.get(id);
         return res;
     }
 }

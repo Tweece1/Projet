@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -29,6 +30,7 @@ public class ListActivity extends AppCompatActivity {
 
     private EditText titre;
     private String new_titre;
+    private String current_title;
     private ArrayList<Element> container;
     private Liste current_list;
     private long id;
@@ -53,7 +55,7 @@ public class ListActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         id=intent.getLongExtra("id",-1);
-        Log.i("DIM", String.valueOf(id));
+        Log.i("DIM", "id : "+String.valueOf(id));
         array_id=intent.getIntExtra("array_id",0);
         copy= database.getAllListsElement(id);
         container=new ArrayList<>();
@@ -72,7 +74,7 @@ public class ListActivity extends AppCompatActivity {
             i++;
         }
 
-        current_list= database.getList(id);
+        current_list=database.getList(id);
 
         new_titre=intent.getStringExtra("titre");
         titre.setText(new_titre);
@@ -80,8 +82,7 @@ public class ListActivity extends AppCompatActivity {
         listedetest = new ArrayList<>();
         aff = new ArrayList<>();
         for (Element e: container) {
-            //listedetest.add(e.afficher());
-            current_list.add_element(e);
+            current_list.liste.add(e);
             if(e.parent==null){
                 aff.add(e);
                 listedetest.add(e.afficher());
@@ -133,21 +134,40 @@ public class ListActivity extends AppCompatActivity {
                 refresh();
             }
         };
-        new Handler().postDelayed(runnable,100);
+        new Handler().postDelayed(runnable,500);
     }
 
 
     public void onBack(View v){
-        for (Element e:container){
-            database.updateElement(e);
+        current_title=titre.getText().toString();
+        if (isthere(current_title) && !current_title.equals(new_titre)){
+            if (current_title.equals(""))
+                Toast.makeText(this,"Ce nom : "+current_title+" est invalider car vide",Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this,"Ce nom : "+current_title+" existe déjà",Toast.LENGTH_SHORT).show();
         }
-        Intent intent=new Intent();
-        new_titre=titre.getText().toString();
-        intent.putExtra("titre",new_titre);
-        intent.putExtra("id",id);
-        intent.putExtra("array_id",array_id);
-        setResult(2,intent);
-        finish();
+        else{
+            for (Element e:container){
+                database.updateElement(e);
+            }
+            Intent intent=new Intent();
+            intent.putExtra("titre",current_title);
+            intent.putExtra("id",id);
+            intent.putExtra("array_id",array_id);
+            setResult(2,intent);
+            finish();
+        }
+    }
+
+    public boolean isthere(String name){
+        boolean not_there=true;
+        int i=0;
+        while (not_there && i<MainActivity.listes.size()){
+            if (name.equals(MainActivity.listes.get(i).name))
+                not_there=false;
+            i++;
+        }
+        return !not_there;
     }
 
     @Override
@@ -199,6 +219,7 @@ public class ListActivity extends AppCompatActivity {
             current_list.add_element(sousListe);
             aff.add(sousListe);
             database.addElement(sousListe);
+            database.updateList(current_list);
             dialog.dismiss();
             refresh();
         }
@@ -220,17 +241,24 @@ public class ListActivity extends AppCompatActivity {
             SousListe sousListe = new SousListe(s,sl,current_list);
             sousListe.ajou();
             sl.liste.add(sousListe);
+
             database.updateElement(sl);
+
             adapter.remove(adapter.getItem(currentpos));
             adapter.insert(sl.afficher(),currentpos);
             adapter.insert(sousListe.afficher(),currentpos+1);
+
             container.remove(e);
             container.add(currentpos,sl);
             container.add(currentpos+1,sousListe);
+
             current_list.delete_element(e);
             current_list.add_element(sl);
             current_list.add_element(sousListe);
+
             database.addElement(sousListe);
+            database.updateList(current_list);
+
             dialog.dismiss();
             refresh();
         }
@@ -244,7 +272,10 @@ public class ListActivity extends AppCompatActivity {
             container.add(item);
             aff.add(item);
             current_list.add_element(item);
+
             database.addElement(item);
+            database.updateList(current_list);
+
             dialog.dismiss();
             refresh();
         }
@@ -282,6 +313,7 @@ public class ListActivity extends AppCompatActivity {
             current_list.add_element(item);
 
             database.addElement(item);
+            database.updateList(current_list);
 
             dialog.dismiss();
             refresh();
@@ -301,6 +333,7 @@ public class ListActivity extends AppCompatActivity {
         aff.remove(e);
         adapter.remove(s);
         database.delete(e.getId());
+        database.updateList(current_list);
         dialog.dismiss();
         refresh();
     }
@@ -349,7 +382,7 @@ public class ListActivity extends AppCompatActivity {
             aff.remove(e);
         }
         dialog.dismiss();
-        new Handler().postDelayed(runnable,100);
+        new Handler().postDelayed(runnable,500);
         //refresh();
     }
 
@@ -361,7 +394,7 @@ public class ListActivity extends AppCompatActivity {
             po+=1;
         }
         dialog.dismiss();
-        new Handler().postDelayed(runnable,100);
+        new Handler().postDelayed(runnable,500);
         //refresh();
     }
 }
