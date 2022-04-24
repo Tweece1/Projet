@@ -46,7 +46,6 @@ public class ListActivity extends AppCompatActivity {
     private int currentpos;
     private ArrayList<Element> copy;
     private ArrayList<Element> aff;
-    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,13 +127,13 @@ public class ListActivity extends AppCompatActivity {
             }
             i++;
         }
-        runnable = new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 refresh();
             }
         };
-        new Handler().postDelayed(runnable,500);
+        new Handler().postDelayed(runnable,100);
     }
 
 
@@ -211,23 +210,30 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void ajout_sousliste(View v){
-        if(!edttest.getText().toString().equals("")){
-            String s = edttest.getText().toString();
+        String s = edttest.getText().toString();
+        if(contient(container,s)){
+            Toast.makeText(this,"Cet élément existe déjà", Toast.LENGTH_SHORT).show();
+        }
+        else if(!s.equals("")){
+            s = edttest.getText().toString();
             SousListe sousListe=new SousListe(s,null,current_list);
             adapter.add(sousListe.afficher());
             container.add(sousListe);
             current_list.add_element(sousListe);
             aff.add(sousListe);
             database.addElement(sousListe);
-            database.updateList(current_list);
             dialog.dismiss();
             refresh();
         }
     }
 
     public void ajout_sousliste2(View v){
-        if(!edttest.getText().toString().equals("")){
-            String s = edttest.getText().toString();
+        String s = edttest.getText().toString();
+        if(contient(container,s)){
+            Toast.makeText(this,"Cet élément existe déjà", Toast.LENGTH_SHORT).show();
+        }
+        else if(!s.equals("")){
+            s = edttest.getText().toString();
             Element e = container.get(currentpos);
             SousListe sl;
             if(e instanceof SousListe){
@@ -265,8 +271,11 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void ajout_item(View v){
-        if(!edttest.getText().toString().equals("")){
-            String s = edttest.getText().toString();
+        String s = edttest.getText().toString();
+        if(contient(container,s)){
+            Toast.makeText(this,"Cet élément existe déjà", Toast.LENGTH_SHORT).show();
+        }
+        else if(!s.equals("")){
             Item item=new Item(s,null,current_list);
             adapter.add(item.afficher());
             container.add(item);
@@ -282,8 +291,12 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void ajout_item2(View v){
-        if(!edttest.getText().toString().equals("")){
-            String s = edttest.getText().toString();
+        String s = edttest.getText().toString();
+        if(contient(container,s)){
+            Toast.makeText(this,"Cet élément existe déjà", Toast.LENGTH_SHORT).show();
+        }
+        else if(!s.equals("")){
+            s = edttest.getText().toString();
             Element e = container.get(currentpos);
             SousListe sl;
             if(e instanceof SousListe){
@@ -382,7 +395,14 @@ public class ListActivity extends AppCompatActivity {
             aff.remove(e);
         }
         dialog.dismiss();
-        new Handler().postDelayed(runnable,500);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.i("DIM","OOOOOOOOOOOOOOOOOOO");
+                refresh();
+            }
+        };
+        new Handler().postDelayed(runnable,100);
         //refresh();
     }
 
@@ -394,7 +414,27 @@ public class ListActivity extends AppCompatActivity {
             po+=1;
         }
         dialog.dismiss();
-        new Handler().postDelayed(runnable,500);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.i("DIM","OOOOOOOOOOOOOOOOOOO");
+                refresh();
+            }
+        };
+        new Handler().postDelayed(runnable,100);
         //refresh();
+    }
+
+    public boolean contient(ArrayList<Element> conteneur, String str){
+        int l = 0;
+        boolean bo =false;
+        while (!bo && l<conteneur.size()){
+            Element element = conteneur.get(l);
+            if(element.name.equals(str)){
+                bo = true;
+            }
+            l+=1;
+        }
+        return bo;
     }
 }
