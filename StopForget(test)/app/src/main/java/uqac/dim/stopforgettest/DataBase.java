@@ -16,6 +16,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -268,6 +269,7 @@ public class DataBase {
             }
             c.moveToNext();
         }
+        c.close();
 
         return res;
     }
@@ -277,6 +279,21 @@ public class DataBase {
         for (Element e: deleted){
             delete(e.getId());
         }
+    }
+
+    public void deleteAllListsElement2(long id){
+        Cursor c=database.query(TABLE_LISTES,allColums,null,null,null,null,null);
+        c.moveToFirst();
+        while (!c.isAfterLast()){
+            @SuppressLint("Range") int pa=c.getInt(c.getColumnIndex(PARENT_ID));
+            @SuppressLint("Range") int id1=c.getInt(c.getColumnIndex(ID));
+            if (pa == id) {
+                delete(id1);
+            }
+            c.moveToNext();
+        }
+        c.close();
+        delete(id);
     }
 
     public void delete(long id){

@@ -76,6 +76,7 @@ public class Item extends Element {
             p.nb+=1;
             p = p.parent;
         }
+        ancetre.nb++;
     }
 
     @Override

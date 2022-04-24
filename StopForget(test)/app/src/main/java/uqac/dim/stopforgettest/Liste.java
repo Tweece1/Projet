@@ -37,8 +37,8 @@ public class Liste {
                 nbc--;
             }
         } else {
-            nb -= ((SousListe)e).nb;
-            nbc -= ((SousListe)e).nbc;
+            nb-=((SousListe)e).nb;
+            nbc-=((SousListe)e).nbc;
         }
     }
 

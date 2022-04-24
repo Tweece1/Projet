@@ -57,11 +57,6 @@ public class MainActivity extends AppCompatActivity {
         database.open();
         createNotificationChannel();
 
-        for (int i=50;i<53;i++){
-            database.delete(i);
-        }
-
-
         listes=database.getAllLists();
         listes_name = new ArrayList<>();
         for (Liste l:listes){

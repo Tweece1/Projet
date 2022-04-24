@@ -345,7 +345,12 @@ public class ListActivity extends AppCompatActivity {
         container.remove(currentpos);
         aff.remove(e);
         adapter.remove(s);
-        database.delete(e.getId());
+        Log.i("DIM",e.name);
+        if (e.type==Element.Type.SOUSLISTE){
+            database.deleteAllListsElement2(e.getId());
+        }
+        else
+            database.delete(e.getId());
         database.updateList(current_list);
         dialog.dismiss();
         refresh();
