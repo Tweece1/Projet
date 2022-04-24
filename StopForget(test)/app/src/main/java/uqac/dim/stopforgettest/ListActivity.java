@@ -54,7 +54,7 @@ public class ListActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         id=intent.getLongExtra("id",-1);
-        Log.i("DIM", "id : "+String.valueOf(id));
+        Log.i("DIM", "id : "+ id);
         array_id=intent.getIntExtra("array_id",0);
         copy= database.getAllListsElement(id);
         container=new ArrayList<>();
@@ -410,8 +410,10 @@ public class ListActivity extends AppCompatActivity {
         SousListe sl = (SousListe) container.get(currentpos);
         int po = aff.indexOf(sl);
         for(Element e:sl.liste){
-            aff.add(po+1,e);
-            po+=1;
+            if(!aff.contains(e)){
+                aff.add(po+1,e);
+                po+=1;
+            }
         }
         dialog.dismiss();
         Runnable runnable = new Runnable() {
