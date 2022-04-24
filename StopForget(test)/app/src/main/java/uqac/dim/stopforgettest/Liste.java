@@ -37,9 +37,30 @@ public class Liste {
                 nbc--;
             }
         } else {
+            Log.i("DIM", String.valueOf(((SousListe)e).nb));
             nb-=((SousListe)e).nb;
             nbc-=((SousListe)e).nbc;
         }
+    }
+
+    public void count(){
+        int numb=0;
+        for (Element e:liste){
+            if (e.type==Element.Type.ITEM){
+                numb+=1;
+            }
+        }
+        nb=numb;
+    }
+
+    public void countNBC(){
+        int numb=0;
+        for (Element e:liste){
+            if (e.type==Element.Type.ITEM && e.checked){
+                numb+=1;
+            }
+        }
+        nbc=numb;
     }
 
     public String afficher(){

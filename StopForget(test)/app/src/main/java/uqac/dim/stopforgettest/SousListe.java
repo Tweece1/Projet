@@ -1,5 +1,7 @@
 package uqac.dim.stopforgettest;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class SousListe extends Element{
@@ -131,6 +133,7 @@ public class SousListe extends Element{
         }
         liste.clear();
         SousListe p = parent;
+        Log.i("DIM", String.valueOf(parent==null));
         while (p!=null){
             p.nb-=nb;
             p.nbc-=nbc;

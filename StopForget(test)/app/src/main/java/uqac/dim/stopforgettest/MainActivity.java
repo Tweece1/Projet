@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
             Liste liste=searchList(adapter.getPosition(name));
             database.deleteAllListsElement(liste.getId());
             database.delete(liste.getId());
+            listes.remove(liste);
             adapter.remove(name);
         }
         adapter.notifyDataSetChanged();

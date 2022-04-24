@@ -54,7 +54,6 @@ public class ListActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         id=intent.getLongExtra("id",-1);
-        Log.i("DIM", "id : "+ id);
         array_id=intent.getIntExtra("array_id",0);
         copy= database.getAllListsElement(id);
         container=new ArrayList<>();
@@ -149,6 +148,9 @@ public class ListActivity extends AppCompatActivity {
             for (Element e:container){
                 database.updateElement(e);
             }
+            current_list.count();
+            current_list.countNBC();
+            database.updateList(current_list);
             Intent intent=new Intent();
             intent.putExtra("titre",current_title);
             intent.putExtra("id",id);
@@ -345,7 +347,6 @@ public class ListActivity extends AppCompatActivity {
         container.remove(currentpos);
         aff.remove(e);
         adapter.remove(s);
-        Log.i("DIM",e.name);
         if (e.type==Element.Type.SOUSLISTE){
             database.deleteAllListsElement2(e.getId());
         }
