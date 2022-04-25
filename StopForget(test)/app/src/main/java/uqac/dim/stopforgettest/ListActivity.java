@@ -81,9 +81,11 @@ public class ListActivity extends AppCompatActivity {
         aff = new ArrayList<>();
         for (Element e: container) {
             current_list.liste.add(e);
+            aff.add(e);
+            listedetest.add(e.afficher());
             if(e.parent==null){
-                aff.add(e);
-                listedetest.add(e.afficher());
+                //aff.add(e);
+                //listedetest.add(e.afficher());
             }
         }
         adapter = new ArrayAdapter<>(this,R.layout.listview2,listedetest);
@@ -361,7 +363,7 @@ public class ListActivity extends AppCompatActivity {
         adapter.clear();
         for(int k =0; k<container.size();k++){
             Element element = container.get(k);
-            if(aff.contains(element)){
+            if(aff.contains(element) || true){
                 adapter.add(element.afficher());
                 TextView v = (TextView) getViewByPosition(k,listView2);
                 if(element.checked){
@@ -395,6 +397,7 @@ public class ListActivity extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
+    //la fonction reduire nous causait pleins de bugs, nous avons donc décidé de ne pas l'implémenter même si elle aurait apporté plus de clarté à l'application.
     public void reduire(View v){
         SousListe sl = (SousListe) container.get(currentpos);
         for(Element e:sl.liste){
@@ -404,7 +407,6 @@ public class ListActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Log.i("DIM","OOOOOOOOOOOOOOOOOOO");
                 refresh();
             }
         };
@@ -412,6 +414,7 @@ public class ListActivity extends AppCompatActivity {
         //refresh();
     }
 
+    //la fonction augmenter nous causait pleins de bugs, nous avons donc décidé de ne pas l'implémenter même si elle aurait apporté plus de clarté à l'application.
     public void augmenter(View v){
         SousListe sl = (SousListe) container.get(currentpos);
         int po = aff.indexOf(sl);
@@ -425,7 +428,6 @@ public class ListActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Log.i("DIM","OOOOOOOOOOOOOOOOOOO");
                 refresh();
             }
         };

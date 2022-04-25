@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">StopForget!(test)</string>
+    <string name="app_name">StopForget!</string>
     <string name="desc">créer</string>
     <string name="title">Titre</string>
     <string name="valider">VALIDER</string>
     <string name="poubelle">poubelle</string>
     <string name="annuler">ANNULER</string>
-    <string name="day">Day(:01)</string>
-    <string name="month">Month(:02)</string>
-    <string name="hour">Hour(ex: 12)</string>
+    <string name="day">Jour(:01)</string>
+    <string name="month">Mois(:02)</string>
+    <string name="hour">Heure(ex: 12)</string>
     <string name="minute">Min(ex: 30)</string>
     <string name="popup_ajout_title">Ajout d\'un élément :</string>
     <string name="nom">Nom</string>

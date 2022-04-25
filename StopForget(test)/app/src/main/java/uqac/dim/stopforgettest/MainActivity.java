@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Nous avons laissé la possibilité à l'utilisateur de mettre une alarme, malheureusement celle-ci ne marche pas.
     public void makeAlarm(View v){
         dialogBuilder=new AlertDialog.Builder(this);
         View view=getLayoutInflater().inflate(R.layout.pop_up_layout,null);

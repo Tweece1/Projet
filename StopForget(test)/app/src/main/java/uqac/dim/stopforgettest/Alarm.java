@@ -79,6 +79,7 @@ public class Alarm extends BroadcastReceiver {
                         alarme.set(Calendar.MONTH,month);
                         alarme.set(Calendar.HOUR_OF_DAY,hour);
                         alarme.set(Calendar.MINUTE,minute);
+                        alarme.set(Calendar.YEAR,alarme.get(Calendar.YEAR));
                     }
                 }
             }
@@ -89,6 +90,7 @@ public class Alarm extends BroadcastReceiver {
                         alarme.set(Calendar.MONTH,month);
                         alarme.set(Calendar.HOUR_OF_DAY,hour);
                         alarme.set(Calendar.MINUTE,minute);
+                        alarme.set(Calendar.YEAR,alarme.get(Calendar.YEAR));
                     }
                 }
             }
@@ -99,6 +101,7 @@ public class Alarm extends BroadcastReceiver {
                         alarme.set(Calendar.MONTH,month);
                         alarme.set(Calendar.HOUR_OF_DAY,hour);
                         alarme.set(Calendar.MINUTE,minute);
+                        alarme.set(Calendar.YEAR,alarme.get(Calendar.YEAR));
                     }
             }
         }
